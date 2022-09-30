@@ -41,3 +41,47 @@ class Cell:
             return "1"
         if self.contains == "red":
             return "2"
+
+
+class Match:
+    def __init__(self, board):
+        self.board = board
+
+    def boardlimits(self, posX, posY):
+        limitX = (posX >= 0) and (posX < self.board.size)
+        limitY = (posY >= 0) and (posY < self.board.size)
+        return limitX and limitY
+
+    # maybe a redundant method?
+    def enemycells(self, playerColor):
+        matrix = self.board.cells
+        enemies = []
+        for list in matrix:
+            for cell in list:
+                if cell.contains != playerColor:
+                    enemies.append(cell)
+        return enemies
+
+    def freecells(self, enemyColor):
+        freeCells = []
+        matrix = self.board.cells
+        # board limits?
+        for list in matrix:
+            for cell in list:
+                if cell.contains != enemyColor:
+                    freeCells.append(cell)
+        return freeCells
+
+    # verify if the input is valid, in progress
+    def validmove(self, playerColor, input):
+        return True
+
+    # funcion que revise si alguien gano, pendiente
+    # funcion que revise estado del tablero, pendiente
+
+
+class Player:
+    def __init__(self, playerColor):
+        self.playerColor = playerColor
+
+    # action function, pendiente
