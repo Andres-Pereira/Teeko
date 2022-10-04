@@ -73,7 +73,21 @@ class Match:
                     freeCells.append(cell)
         return freeCells
 
-    # in progress
+    def adyacentMove(self, cell):
+        actions = []
+        directions = [
+            [-1, -1], [-1, 0], [-1, +1],
+            [0, -1],           [0, +1],
+            [+1, -1], [+1, 0], [+1, +1],
+        ]
+
+        for i in directions:
+            adx = cell.posX + i[0]
+            ady = cell.posY + i[1]
+            if self.boardlimits(adx, ady):
+                actions.append([adx, ady])
+            return actions
+
     def validmove(self, freeCells, input):
         valid = False
         if input in freeCells:

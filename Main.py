@@ -16,6 +16,8 @@ def play():
     # muestra estado del tablero
     mat = board.__str__()
     print(mat)
+    pr = match.boardlimits(4, 4)
+    print(pr)
 
 
 
