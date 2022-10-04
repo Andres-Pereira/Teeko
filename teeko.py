@@ -102,6 +102,10 @@ class Match:
         return None
 
     def vertical(self, goal=4):
+        red = 0
+        black = 0
+        matrix = self.board.cells
+        matrix[0][1]
         return None
 
     def diagonal(self, goal=4):
