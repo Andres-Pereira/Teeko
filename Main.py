@@ -10,38 +10,74 @@ def play():
     match = Match(board)
     for i in range(5):
         print("Black's turn")
-        p1X = input("Enter the position X: ")
-        p1Y = input("Enter the position Y: ")
-        # check if free cell and board limits, repetir input en caso de invalido
-        free = match.freecells(player2.playerColor)
+        valid = False
+        while valid == False:
+            p1X = input("Enter the position X: ")
+            p1Y = input("Enter the position Y: ")
+            cell = Cell(int(p1X), int(p1Y), player1.playerColor)
+            valid = match.isValid(cell, player2.playerColor)
+
         match.board.place_marker(int(p1X), int(p1Y), player1.playerColor)
-        print("Red's turn")
-        p2X = input("Enter the position X: ")
-        p2Y = input("Enter the position Y: ")
-        # check if free cell and board limits, repetir input en caso de invalido
-        match.board.place_marker(int(p2X), int(p2Y), player2.playerColor)
+
         mat = board.__str__()
         print(mat)
-    winner = match.checkWinner()
 
+        print("Red's turn")
+        valid = False
+        while valid == False:
+            p2X = input("Enter the position X: ")
+            p2Y = input("Enter the position Y: ")
+            cell = Cell(int(p2X), int(p2Y), player2.playerColor)
+            valid = match.isValid(cell, player1.playerColor)
+
+        match.board.place_marker(int(p2X), int(p2Y), player2.playerColor)
+
+        mat = board.__str__()
+        print(mat)
+
+    winner = match.checkWinner()
+    # ------------------------------------------------------------------------
     while winner == None:
         print("Black's turn")
-        p1X = input("Enter the position X: ")
-        p1Y = input("Enter the position Y: ")
-        cell = Cell(p1X, p1Y, player1.playerColor)
+        playersMarker = False
+        while playersMarker == False:
+            print("Which marker do you want to move?")
+            p1X = input("Enter the position X: ")
+            p1Y = input("Enter the position Y: ")
+            cell = Cell(int(p1X), int(p1Y), player1.playerColor)
+            playersMarker = match.isPlayers(cell, player1.playerColor)
+
         ad = match.adyacentMove(cell)
-        # Falta verificar if free cell and board limits, corregir lo de cell, repetir input en caso de invalido
+
+        valid = False
+        ady = False
+        while valid == False and ady == False:
+            print("Where do you want to move?")
+            print(ad)
+            p1X = input("Enter the position X: ")
+            p1Y = input("Enter the position Y: ")
+            cell = Cell(int(p1X), int(p1Y), player1.playerColor)
+            valid = match.isValid(cell, player2.playerColor)
+            ady = match.isAdy(cell, ad)
+
         if cell in ad:
             match.board.place_marker(int(p1X), int(p1Y), player1.playerColor)
         winner = match.checkWinner()
+
         print("Red's turn")
-        p2X = input("Enter the position X: ")
-        p2Y = input("Enter the position Y: ")
+        valid = False
+        while valid == False:
+            p2X = input("Enter the position X: ")
+            p2Y = input("Enter the position Y: ")
+            cell = Cell(int(p2X), int(p2Y), player2.playerColor)
+            valid = match.isValid(cell, player1.playerColor)
+
         ad = match.adyacentMove(cell)
-        # Falta verificar if free cell and board limits, repetir input en caso de invalido
+
         if cell in ad:
             match.board.place_marker(int(p2X), int(p2Y), player2.playerColor)
         winner = match.checkWinner()
+
     match.shoWinner(winner)
 
 
