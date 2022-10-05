@@ -24,10 +24,10 @@ class IA:
     def min_max_desicion(self, state, player):
         if (player.playerColor == "black"):
             #retorna un estado? como obtenerlo?
-            max = self.min_value(state, player)
+            max = self.min_value(Result(S,a))
             return max
         else:
-            min = self.max_value(state, player)
+            min = self.max_value(Result(S,a))
             return min
 
     def min_value(self, state):
@@ -39,7 +39,7 @@ class IA:
         #actions deberia ser un metodo que expande el estado mostrando sus acciones
 
         for a in Actions(state):
-            v = Min(v, self.max_value(Result(S,a)))
+            v = Min(v, self.max_value(Result(S,a))
 
         #ver como retornar un estado y no un valor
         return v
