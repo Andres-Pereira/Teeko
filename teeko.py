@@ -2,8 +2,8 @@
 import numpy as np
 
 
-# Falta: verificar winner
-# Mejorar: Input de un solo llamado, cambiar input a letra
+# Falta: verificar winner, corregir el ad con cell
+# Mejorar: Input de un solo llamado, cambiar input a letra, numero out of range
 
 # Generating board
 class Board:
@@ -83,6 +83,26 @@ class Match:
                 actions.append([adx, ady])
             return actions
 
+    def isAdy(self, cell, actions):
+        adx = int(cell.posX)
+        ady = int(cell.posY)
+        if [adx, ady] in actions:
+            return True
+        return False
+    def isValid(self, cell, enemycolor):
+        matrix = self.board.cells
+        if self.boardlimits(cell.posX, cell.posY):
+            if str(matrix[cell.posX][cell.posY].contains) == str(enemycolor):
+                return False
+            if str(matrix[cell.posX][cell.posY].contains) == str(cell.contains):
+                return False
+            return True
+
+    def isPlayers(self, cell, playercolor):
+        matrix = self.board.cells
+        if str(matrix[cell.posX][cell.posY].contains) == str(playercolor):
+            return True
+        return False
     # Validation for a winner
     def horizontal(self, goal=4):
         matrix = self.board.cells
@@ -139,7 +159,7 @@ class Match:
 
         return winner
 
-    def shoWinner(winner):
+    def shoWinner(self, winner):
         if winner == 1:
             print("Black markers win")
         elif winner == -1:
