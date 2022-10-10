@@ -116,17 +116,17 @@ class Match:
 
     def horizontal(self, goal):
         matrix = self.board.cells
+        red = 0
+        black = 0
         for list in matrix:
-            red = 0
-            black = 0
             for cell in list:
                 if cell.contains == "black":
                     black += 1
                 elif cell.contains == "red":
                     red += 1
-                if black == goal:
+                if black == 4:
                     return 1
-                if red == goal:
+                if red == 4:
                     return -1
         return None
 

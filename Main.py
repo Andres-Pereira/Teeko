@@ -1,6 +1,30 @@
 from teeko import Board, Match, Player, Cell
 
 
+def testHorizontal():
+    board = Board()
+    board.initializateboard()
+    player1 = Player("black")
+    player2 = Player("red")
+    pX = 0
+    winner = None
+    match = Match(board)
+
+    for i in range(4):
+
+        cell = Cell(int(pX), int(0), player1.playerColor)
+        match.board.place_marker(int(pX), int(2), player1.playerColor)
+
+        cell = Cell(int(pX), int(1), player2.playerColor)
+
+        match.board.place_marker(int(pX), int(0), player2.playerColor)
+        pX += 1
+
+    print(board)
+    winner = match.checkWinner()
+    match.shoWinner(winner)
+
+
 def testVertical():
     board = Board()
     board.initializateboard()
@@ -109,5 +133,6 @@ def play():
     match.shoWinner(winner)
 
 
-testVertical()
+# testVertical()
+testHorizontal()
 # play()
