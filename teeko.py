@@ -16,7 +16,7 @@ class Board:
         for row in self.cells:
             for cell in row:
                 matrix = matrix + str(cell) + ' '
-                
+
             matrix = matrix + "\n"
         return matrix
 
@@ -95,8 +95,8 @@ class Match:
         matrix = self.board.cells
 
         if self.boardlimits(cell.posX, cell.posY):
-        
-            print (matrix[cell.posX][cell.posY].contains)
+
+            print(matrix[cell.posX][cell.posY].contains)
             if matrix[cell.posY][cell.posX].contains == enemycolor:
                 print('ya existe una pieza enemiga aqui')
                 return False
@@ -113,7 +113,8 @@ class Match:
             return True
         return False
     # Validation for a winner
-    def horizontal(self, goal=4):
+
+    def horizontal(self, goal):
         matrix = self.board.cells
         for list in matrix:
             red = 0
@@ -129,40 +130,41 @@ class Match:
                     return -1
         return None
 
-    def vertical(self, goal=4):
+    def vertical(self, goal):
         matrix = self.board.cells
+        red = 0
+        black = 0
         for j in range(5):
-            red = 0
-            black = 0
+
             for i in range(5):
-                cell = matrix[j, i]
+                cell = matrix[j][i]
                 if cell.contains == "black":
                     black += 1
                 elif cell.contains == "red":
                     red += 1
-                if black == goal:
+                if black == 4:
                     return 1
-                if red == goal:
+                if red == 4:
                     return -1
         return None
 
-    def diagonal(self, goal=4):
+    def diagonal(self, goal):
         return None
 
-    def square(self, goal=4):
+    def square(self, goal):
         return None
 
-    def checkWinner(self, goal=4):
-        winner = self.horizontal(self, goal)
+    def checkWinner(self):
+        winner = self.horizontal(self)
         if winner != None:
             return winner
-        winner = self.vertical(self, goal)
+        winner = self.vertical(self)
         if winner != None:
             return winner
-        winner = self.diagonal(self, goal)
+        winner = self.diagonal(self)
         if winner != None:
             return winner
-        winner = self.square(self, goal)
+        winner = self.square(self)
         if winner != None:
             return winner
 
