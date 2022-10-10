@@ -2,8 +2,7 @@
 import numpy as np
 
 
-# Falta: verificar winner, corregir el ad con cell
-# Mejorar: Input de un solo llamado, cambiar input a letra, numero out of range
+# Falta: verificar winner, corregir adyacente, out of range
 
 # Generating board
 class Board:
@@ -30,6 +29,9 @@ class Board:
         position = self.cells[posY][posX]
         position.contains = marker
 
+    def remove_marker(self, posX, posY):
+        position = self.cells[posY][posX]
+        position.contains = None
 
 # Generates a cell
 class Cell:
@@ -70,6 +72,7 @@ class Match:
     # Valid once we placed the markers
     def adyacentMove(self, cell):
         actions = []
+        matrix = self.board.cells
         directions = [
             [-1, -1], [-1, 0], [-1, +1],
             [0, -1], [0, +1],
@@ -77,11 +80,13 @@ class Match:
         ]
 
         for i in directions:
-            adx = cell.posX + i[0]
-            ady = cell.posY + i[1]
-            if self.boardlimits(adx, ady):
+            adx = int(cell.posX) + i[0]
+            ady = int(cell.posY) + i[1]
+            print(matrix[cell.posX][cell.posY].contains)
+            if self.boardlimits(adx, ady) and str(matrix[cell.posX][cell.posY].contains) == "None":
                 actions.append([adx, ady])
-            return actions
+
+        return actions
 
     def isAdy(self, cell, actions):
         adx = int(cell.posX)
@@ -89,12 +94,13 @@ class Match:
         if [adx, ady] in actions:
             return True
         return False
-    def isValid(self, cell, enemycolor):
+    def isValid(self, cell, enemycolor, playercolor):
         matrix = self.board.cells
+        print(matrix[cell.posX][cell.posY].contains)
         if self.boardlimits(cell.posX, cell.posY):
             if str(matrix[cell.posX][cell.posY].contains) == str(enemycolor):
                 return False
-            if str(matrix[cell.posX][cell.posY].contains) == str(cell.contains):
+            if str(matrix[cell.posX][cell.posY].contains) == str(playercolor):
                 return False
             return True
 
@@ -104,37 +110,11 @@ class Match:
             return True
         return False
     # Validation for a winner
+
     def horizontal(self, goal=4):
-        matrix = self.board.cells
-        for list in matrix:
-            red = 0
-            black = 0
-            for cell in list:
-                if cell.contains == "black":
-                    black += 1
-                elif cell.contains == "red":
-                    red += 1
-                if black == goal:
-                    return 1
-                if red == goal:
-                    return -1
         return None
 
     def vertical(self, goal=4):
-        matrix = self.board.cells
-        for j in range(5):
-            red = 0
-            black = 0
-            for i in range(5):
-                cell = matrix[j, i]
-                if cell.contains == "black":
-                    black += 1
-                elif cell.contains == "red":
-                    red += 1
-                if black == goal:
-                    return 1
-                if red == goal:
-                    return -1
         return None
 
     def diagonal(self, goal=4):
@@ -144,16 +124,16 @@ class Match:
         return None
 
     def checkWinner(self, goal=4):
-        winner = self.horizontal(self, goal)
+        winner = self.horizontal(goal)
         if winner != None:
             return winner
-        winner = self.vertical(self, goal)
+        winner = self.vertical(goal)
         if winner != None:
             return winner
-        winner = self.diagonal(self, goal)
+        winner = self.diagonal(goal)
         if winner != None:
             return winner
-        winner = self.square(self, goal)
+        winner = self.square(goal)
         if winner != None:
             return winner
 
