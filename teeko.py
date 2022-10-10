@@ -118,12 +118,18 @@ class Match:
         matrix = self.board.cells
         red = 0
         black = 0
-        for list in matrix:
-            for cell in list:
+        for i in range(5):
+
+            for j in range(5):
+                cell = matrix[i][j]
                 if cell.contains == "black":
                     black += 1
-                elif cell.contains == "red":
+                else:
+                    black = 0
+                if cell.contains == "red":
                     red += 1
+                else:
+                    red = 0
                 if black == 4:
                     return 1
                 if red == 4:
@@ -137,11 +143,15 @@ class Match:
         for j in range(5):
 
             for i in range(5):
-                cell = matrix[j][i]
+                cell = matrix[i][j]
                 if cell.contains == "black":
                     black += 1
-                elif cell.contains == "red":
+                else:
+                    black = 0
+                if cell.contains == "red":
                     red += 1
+                else:
+                    red = 0
                 if black == 4:
                     return 1
                 if red == 4:
@@ -149,6 +159,19 @@ class Match:
         return None
 
     def diagonal(self, goal):
+        matrix = self.board.cells
+        for i in range(5):
+            for j in range(5):
+                if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
+                    if matrix[i][j].contains == "black" and matrix[i+1][j+1].contains == "black" and matrix[i+2][j+2].contains == "black" and matrix[i+3][j+3].contains == "black":
+                        return 1
+                    elif matrix[i][j].contains == "black" and matrix[i+1][j-1].contains == "black" and matrix[i+2][j-2].contains == "black" and matrix[i+3][j-3].contains == "black":
+                        return 1
+
+                    elif matrix[i][j].contains == "red" and matrix[i+1][j+1].contains == "red" and matrix[i+2][j+2].contains == "red" and matrix[i+3][j+3].contains == "red":
+                        return -1
+                    elif matrix[i][j].contains == "red" and matrix[i+1][j-1].contains == "red" and matrix[i+2][j-2].contains == "red" and matrix[i+3][j-3].contains == "red":
+                        return -1
         return None
 
     def square(self, goal):
