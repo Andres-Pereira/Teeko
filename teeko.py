@@ -15,7 +15,8 @@ class Board:
         matrix = ""
         for row in self.cells:
             for cell in row:
-                matrix = matrix + str(cell)
+                matrix = matrix + str(cell) + ' '
+                
             matrix = matrix + "\n"
         return matrix
 
@@ -89,14 +90,22 @@ class Match:
         if [adx, ady] in actions:
             return True
         return False
+
     def isValid(self, cell, enemycolor):
         matrix = self.board.cells
+
         if self.boardlimits(cell.posX, cell.posY):
-            if str(matrix[cell.posX][cell.posY].contains) == str(enemycolor):
+        
+            print (matrix[cell.posX][cell.posY].contains)
+            if matrix[cell.posY][cell.posX].contains == enemycolor:
+                print('ya existe una pieza enemiga aqui')
                 return False
-            if str(matrix[cell.posX][cell.posY].contains) == str(cell.contains):
+            if matrix[cell.posY][cell.posX].contains == cell.contains:
+                print('ya existe una pieza tuya aqui')
                 return False
-            return True
+            else:
+                print('Movimiento valido')
+                return True
 
     def isPlayers(self, cell, playercolor):
         matrix = self.board.cells

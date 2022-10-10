@@ -31,15 +31,21 @@ class IA:
             return min
 
     def min_value(self, state):
+        #retorna un estado con valor utilitario  (objeto con accion y val num)
+
         if (state.terminal_test(state)):
             return state.utility_function(state)
         v = 1000
 
         #entender que es Result(S,a)
-        #actions deberia ser un metodo que expande el estado mostrando sus acciones
+        #actions deberia ser un metodo que expande el estado mostrando sus acciones disponibles
 
         for a in Actions(state):
-            v = Min(v, self.max_value(Result(S,a))
+            v = min(v, self.max_value(Result(S,a))
+
+        #funcion Min selecciona el minimo entre v y max_value
+
+        #result es como funcion de trancision segun estado actual y accion
 
         #ver como retornar un estado y no un valor
         return v
@@ -50,5 +56,5 @@ class IA:
         min = -1000
 
         for a in Actions(state):
-            v = Max(v, self.min_value(Result(S, a)))
+            v = max(v, self.min_value(Result(S, a)))
         return v

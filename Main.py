@@ -4,23 +4,27 @@ from teeko import Board, Match, Player, Cell
 def play():
     board = Board()
     board.initializateboard()
+
     player1 = Player("black")
     player2 = Player("red")
+    
     winner = None
     match = Match(board)
-    for i in range(5):
+    
+    for i in range(8):
         print("Black's turn")
         valid = False
         while valid == False:
             p1X = input("Enter the position X: ")
             p1Y = input("Enter the position Y: ")
             cell = Cell(int(p1X), int(p1Y), player1.playerColor)
+            #no valida bien para x=0
             valid = match.isValid(cell, player2.playerColor)
 
         match.board.place_marker(int(p1X), int(p1Y), player1.playerColor)
 
         mat = board.__str__()
-        print(mat)
+        print(board)
 
         print("Red's turn")
         valid = False
@@ -33,7 +37,7 @@ def play():
         match.board.place_marker(int(p2X), int(p2Y), player2.playerColor)
 
         mat = board.__str__()
-        print(mat)
+        print(board)
 
     winner = match.checkWinner()
     # ------------------------------------------------------------------------
