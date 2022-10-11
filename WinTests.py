@@ -117,8 +117,8 @@ def testVertical():
     match.shoWinner(winner)
 
 
-testSquare()
-# testDiagonal2()
-# testDiagonal()
+# testSquare()
+#testDiagonal2()
+#testDiagonal()
 # testVertical()
 # testHorizontal()

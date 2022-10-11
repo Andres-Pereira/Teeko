@@ -88,8 +88,8 @@ class Match:
         for i in directions:
             adx = int(cell.posX) + i[0]
             ady = int(cell.posY) + i[1]
-            print(matrix[cell.posX][cell.posY].contains)
-            if self.boardlimits(adx, ady) and str(matrix[cell.posX][cell.posY].contains) == "None":
+            # print(matrix[cell.posY][cell.posX].contains)
+            if self.boardlimits(adx, ady) and str(matrix[cell.posY][cell.posX].contains) == "None":
                 actions.append([adx, ady])
 
         return actions
@@ -105,7 +105,6 @@ class Match:
         matrix = self.board.cells
         if self.boardlimits(cell.posX, cell.posY):
 
-            print(matrix[cell.posY][cell.posX].contains)
             if matrix[cell.posY][cell.posX].contains == enemycolor:
                 print('ya existe una pieza enemiga aqui')
                 return False
@@ -118,9 +117,11 @@ class Match:
 
     def isPlayers(self, cell, playercolor):
         matrix = self.board.cells
-        if str(matrix[cell.posX][cell.posY].contains) == str(playercolor):
-            return True
+        if self.boardlimits(cell.posX, cell.posY):
+            if matrix[cell.posY][cell.posX].contains == cell.contains:
+                return True
         return False
+
     # Validation for a winner
 
     def horizontal(self, goal):
@@ -172,7 +173,7 @@ class Match:
         for i in range(5):
             for j in range(5):
                 if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
-                    if (j < 3):
+                    if (j < 3 and i < 3):
                         if matrix[i][j].contains == "black" and matrix[i+1][j+1].contains == "black" and matrix[i+2][j+2].contains == "black" and matrix[i+3][j+3].contains == "black":
                             return 1
                         elif matrix[i][j].contains == "red" and matrix[i+1][j+1].contains == "red" and matrix[i+2][j+2].contains == "red" and matrix[i+3][j+3].contains == "red":
