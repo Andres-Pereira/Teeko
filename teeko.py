@@ -5,7 +5,10 @@ import numpy as np
 # Falta: verificar winner, corregir adyacente, out of range
 
 # Generating board
+
+
 class Board:
+
     def __init__(self, size=5):
         self.size = size
         self.cells = []
@@ -14,8 +17,9 @@ class Board:
         matrix = ""
         for row in self.cells:
             for cell in row:
-                matrix = matrix + str(cell)
+                matrix = matrix + str(cell) + '  '
             matrix = matrix + "\n"
+            c = + 1
         return matrix
 
     def initializateboard(self):
@@ -33,7 +37,9 @@ class Board:
         position = self.cells[posY][posX]
         position.contains = None
 
-# Generates a cell
+# Generates a cell~~
+
+
 class Cell:
     def __init__(self, posX, posY, contains):
         self.posX = posX
@@ -94,15 +100,21 @@ class Match:
         if [adx, ady] in actions:
             return True
         return False
-    def isValid(self, cell, enemycolor, playercolor):
+
+    def isValid(self, cell, enemycolor):
         matrix = self.board.cells
-        print(matrix[cell.posX][cell.posY].contains)
         if self.boardlimits(cell.posX, cell.posY):
-            if str(matrix[cell.posX][cell.posY].contains) == str(enemycolor):
+
+            print(matrix[cell.posY][cell.posX].contains)
+            if matrix[cell.posY][cell.posX].contains == enemycolor:
+                print('ya existe una pieza enemiga aqui')
                 return False
-            if str(matrix[cell.posX][cell.posY].contains) == str(playercolor):
+            if matrix[cell.posY][cell.posX].contains == cell.contains:
+                print('ya existe una pieza tuya aqui')
                 return False
-            return True
+            else:
+                print('Movimiento valido')
+                return True
 
     def isPlayers(self, cell, playercolor):
         matrix = self.board.cells

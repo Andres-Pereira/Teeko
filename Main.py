@@ -12,9 +12,12 @@ def play():
         'C': 2,
         'D': 3,
         'E': 4,
-        'F': 5,
-        'G': 6,
-        'H': 7
+        'a': 0,
+        'b': 1,
+        'c': 2,
+        'd': 3,
+        'e': 4
+
     }
     winner = None
     match = Match(board)
@@ -27,7 +30,8 @@ def play():
             p1Y = charToNum[p1Y]
             p1X = pos[1]
             cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
-            valid = match.isValid(cell, player2.playerColor, player1.playerColor)
+            valid = match.isValid(
+                cell, player2.playerColor)
 
         match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
 
@@ -42,7 +46,8 @@ def play():
             p2Y = charToNum[p2Y]
             p2X = pos[1]
             cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
-            valid = match.isValid(cell, player1.playerColor, player2.playerColor)
+            valid = match.isValid(
+                cell, player1.playerColor)
 
         match.board.place_marker(int(p2X)-1, int(p2Y), player2.playerColor)
 
@@ -76,7 +81,8 @@ def play():
             p1Y = charToNum[p1Y]
             p1X = pos[1]
             cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
-            valid = match.isValid(cell, player2.playerColor, player1.playerColor)
+            valid = match.isValid(
+                cell, player2.playerColor, player1.playerColor)
             ady = match.isAdy(cell, ad)
 
         match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
@@ -107,7 +113,8 @@ def play():
             p2Y = charToNum[p2Y]
             p2X = pos[1]
             cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
-            valid = match.isValid(cell, player1.playerColor, player2.playerColor)
+            valid = match.isValid(
+                cell, player1.playerColor, player2.playerColor)
             ady = match.isAdy(cell, ad)
 
         match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
