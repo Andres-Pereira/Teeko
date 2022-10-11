@@ -37,9 +37,8 @@ class Board:
         position = self.cells[posY][posX]
         position.contains = None
 
+
 # Generates a cell~~
-
-
 class Cell:
     def __init__(self, posX, posY, contains):
         self.posX = posX
@@ -171,7 +170,7 @@ class Match:
                             return 1
                         elif matrix[i][j].contains == "red" and matrix[i+1][j+1].contains == "red" and matrix[i+2][j+2].contains == "red" and matrix[i+3][j+3].contains == "red":
                             return -1
-                    elif (j >= 3):
+                    elif (j >= 3 and i < 3):
                         if matrix[i][j].contains == "black" and matrix[i+1][j-1].contains == "black" and matrix[i+2][j-2].contains == "black" and matrix[i+3][j-3].contains == "black":
                             return 1
                         elif matrix[i][j].contains == "red" and matrix[i+1][j-1].contains == "red" and matrix[i+2][j-2].contains == "red" and matrix[i+3][j-3].contains == "red":
@@ -186,7 +185,7 @@ class Match:
                     if (j < 3):
                         if matrix[i][j].contains == "black" and matrix[i+1][j].contains == "black" and matrix[i][j+1].contains == "black" and matrix[i+1][j+1].contains == "black":
                             return 1
-                    elif (j >= 3):
+                    elif (j >= 3 and i < 3):
                         if matrix[i][j].contains == "red" and matrix[i+1][j].contains == "red" and matrix[i][j+1].contains == "red" and matrix[i+1][j+1].contains == "red":
                             return -1
         return None
