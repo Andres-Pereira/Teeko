@@ -5,7 +5,10 @@ import numpy as np
 # Falta: verificar winner, corregir adyacente, out of range
 
 # Generating board
+
+
 class Board:
+
     def __init__(self, size=5):
         self.size = size
         self.cells = []
@@ -14,8 +17,9 @@ class Board:
         matrix = ""
         for row in self.cells:
             for cell in row:
-                matrix = matrix + str(cell)
+                matrix = matrix + str(cell) + '  '
             matrix = matrix + "\n"
+            c = + 1
         return matrix
 
     def initializateboard(self):
@@ -33,7 +37,9 @@ class Board:
         position = self.cells[posY][posX]
         position.contains = None
 
-# Generates a cell
+# Generates a cell~~
+
+
 class Cell:
     def __init__(self, posX, posY, contains):
         self.posX = posX
@@ -82,8 +88,8 @@ class Match:
         for i in directions:
             adx = int(cell.posX) + i[0]
             ady = int(cell.posY) + i[1]
-            print(matrix[cell.posX][cell.posY].contains)
-            if self.boardlimits(adx, ady) and str(matrix[cell.posX][cell.posY].contains) == "None":
+            # print(matrix[cell.posY][cell.posX].contains)
+            if self.boardlimits(adx, ady) and str(matrix[cell.posY][cell.posX].contains) == "None":
                 actions.append([adx, ady])
 
         return actions
@@ -94,46 +100,115 @@ class Match:
         if [adx, ady] in actions:
             return True
         return False
-    def isValid(self, cell, enemycolor, playercolor):
+
+    def isValid(self, cell, enemycolor):
         matrix = self.board.cells
-        print(matrix[cell.posX][cell.posY].contains)
         if self.boardlimits(cell.posX, cell.posY):
-            if str(matrix[cell.posX][cell.posY].contains) == str(enemycolor):
+
+            if matrix[cell.posY][cell.posX].contains == enemycolor:
+                print('ya existe una pieza enemiga aqui')
                 return False
-            if str(matrix[cell.posX][cell.posY].contains) == str(playercolor):
+            if matrix[cell.posY][cell.posX].contains == cell.contains:
+                print('ya existe una pieza tuya aqui')
                 return False
-            return True
+            else:
+                print('Movimiento valido')
+                return True
 
     def isPlayers(self, cell, playercolor):
         matrix = self.board.cells
-        if str(matrix[cell.posX][cell.posY].contains) == str(playercolor):
-            return True
+        if self.boardlimits(cell.posX, cell.posY):
+            if matrix[cell.posY][cell.posX].contains == cell.contains:
+                return True
         return False
+
     # Validation for a winner
 
-    def horizontal(self, goal=4):
+    def horizontal(self, goal):
+        matrix = self.board.cells
+
+        for i in range(5):
+            red = 0
+            black = 0
+            for j in range(5):
+                cell = matrix[i][j]
+                if cell.contains == "black":
+                    black += 1
+                else:
+                    black = 0
+                if cell.contains == "red":
+                    red += 1
+                else:
+                    red = 0
+                if black == 4:
+                    return 1
+                if red == 4:
+                    return -1
         return None
 
-    def vertical(self, goal=4):
+    def vertical(self, goal):
+        matrix = self.board.cells
+        red = 0
+        black = 0
+        for j in range(5):
+
+            for i in range(5):
+                cell = matrix[i][j]
+                if cell.contains == "black":
+                    black += 1
+                else:
+                    black = 0
+                if cell.contains == "red":
+                    red += 1
+                else:
+                    red = 0
+                if black == 4:
+                    return 1
+                if red == 4:
+                    return -1
         return None
 
-    def diagonal(self, goal=4):
+    def diagonal(self, goal):
+        matrix = self.board.cells
+        for i in range(5):
+            for j in range(5):
+                if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
+                    if (j < 3 and i < 3):
+                        if matrix[i][j].contains == "black" and matrix[i+1][j+1].contains == "black" and matrix[i+2][j+2].contains == "black" and matrix[i+3][j+3].contains == "black":
+                            return 1
+                        elif matrix[i][j].contains == "red" and matrix[i+1][j+1].contains == "red" and matrix[i+2][j+2].contains == "red" and matrix[i+3][j+3].contains == "red":
+                            return -1
+                    elif (j >= 3):
+                        if matrix[i][j].contains == "black" and matrix[i+1][j-1].contains == "black" and matrix[i+2][j-2].contains == "black" and matrix[i+3][j-3].contains == "black":
+                            return 1
+                        elif matrix[i][j].contains == "red" and matrix[i+1][j-1].contains == "red" and matrix[i+2][j-2].contains == "red" and matrix[i+3][j-3].contains == "red":
+                            return -1
         return None
 
-    def square(self, goal=4):
+    def square(self, goal):
+        matrix = self.board.cells
+        for i in range(5):
+            for j in range(5):
+                if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
+                    if (j < 3):
+                        if matrix[i][j].contains == "black" and matrix[i+1][j].contains == "black" and matrix[i][j+1].contains == "black" and matrix[i+1][j+1].contains == "black":
+                            return 1
+                    elif (j >= 3):
+                        if matrix[i][j].contains == "red" and matrix[i+1][j].contains == "red" and matrix[i][j+1].contains == "red" and matrix[i+1][j+1].contains == "red":
+                            return -1
         return None
 
-    def checkWinner(self, goal=4):
-        winner = self.horizontal(goal)
+    def checkWinner(self):
+        winner = self.horizontal(self)
         if winner != None:
             return winner
-        winner = self.vertical(goal)
+        winner = self.vertical(self)
         if winner != None:
             return winner
-        winner = self.diagonal(goal)
+        winner = self.diagonal(self)
         if winner != None:
             return winner
-        winner = self.square(goal)
+        winner = self.square(self)
         if winner != None:
             return winner
 

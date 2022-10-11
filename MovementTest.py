@@ -21,39 +21,19 @@ def play():
     }
     winner = None
     match = Match(board)
-    for i in range(4):
-        print("Black's turn")
-        valid = False
-        while valid == False:
-            pos = input("Enter a position: ")
-            p1Y = pos[0]
-            p1Y = charToNum[p1Y]
-            p1X = pos[1]
-            cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
-            valid = match.isValid(
-                cell, player2.playerColor)
 
-        match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
+    match.board.place_marker(int(0), int(0), player1.playerColor)
+    match.board.place_marker(int(0), int(2), player1.playerColor)
+    match.board.place_marker(int(0), int(3), player1.playerColor)
+    match.board.place_marker(int(0), int(4), player1.playerColor)
 
-        mat = board.__str__()
-        print(mat)
+    match.board.place_marker(int(1), int(1), player2.playerColor)
+    match.board.place_marker(int(1), int(2), player2.playerColor)
+    match.board.place_marker(int(1), int(3), player2.playerColor)
+    match.board.place_marker(int(2), int(3), player2.playerColor)
 
-        print("Red's turn")
-        valid = False
-        while valid == False:
-            pos = input("Enter a position: ")
-            p2Y = pos[0]
-            p2Y = charToNum[p2Y]
-            p2X = pos[1]
-            cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
-            valid = match.isValid(
-                cell, player1.playerColor)
-
-        match.board.place_marker(int(p2X)-1, int(p2Y), player2.playerColor)
-
-        mat = board.__str__()
-        print(mat)
-
+    mat = board.__str__()
+    print(mat)
     winner = match.checkWinner()
     # ------------------------------------------------------------------------
     while winner == None:
@@ -69,13 +49,12 @@ def play():
             playersMarker = match.isPlayers(cell, player1.playerColor)
 
         ad = match.adyacentMove(cell)
-        match.board.remove_marker(int(p2X)-1, int(p2Y))
+        match.board.remove_marker(int(p1X)-1, int(p1Y))
 
         valid = False
         ady = False
         while valid == False and ady == False:
             print("Where do you want to move?")
-            print(ad)
             pos = input("Enter a position: ")
             p1Y = pos[0]
             p1Y = charToNum[p1Y]
@@ -117,7 +96,7 @@ def play():
                 cell, player1.playerColor)
             ady = match.isAdy(cell, ad)
 
-        match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
+        match.board.place_marker(int(p2X)-1, int(p2Y), player2.playerColor)
         mat = board.__str__()
         print(mat)
         winner = match.checkWinner()
