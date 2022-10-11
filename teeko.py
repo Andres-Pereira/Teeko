@@ -123,29 +123,91 @@ class Match:
         return False
     # Validation for a winner
 
-    def horizontal(self, goal=4):
+    def horizontal(self, goal):
+        matrix = self.board.cells
+
+        for i in range(5):
+            red = 0
+            black = 0
+            for j in range(5):
+                cell = matrix[i][j]
+                if cell.contains == "black":
+                    black += 1
+                else:
+                    black = 0
+                if cell.contains == "red":
+                    red += 1
+                else:
+                    red = 0
+                if black == 4:
+                    return 1
+                if red == 4:
+                    return -1
         return None
 
-    def vertical(self, goal=4):
+    def vertical(self, goal):
+        matrix = self.board.cells
+        red = 0
+        black = 0
+        for j in range(5):
+
+            for i in range(5):
+                cell = matrix[i][j]
+                if cell.contains == "black":
+                    black += 1
+                else:
+                    black = 0
+                if cell.contains == "red":
+                    red += 1
+                else:
+                    red = 0
+                if black == 4:
+                    return 1
+                if red == 4:
+                    return -1
         return None
 
-    def diagonal(self, goal=4):
+    def diagonal(self, goal):
+        matrix = self.board.cells
+        for i in range(5):
+            for j in range(5):
+                if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
+                    if (j < 3):
+                        if matrix[i][j].contains == "black" and matrix[i+1][j+1].contains == "black" and matrix[i+2][j+2].contains == "black" and matrix[i+3][j+3].contains == "black":
+                            return 1
+                        elif matrix[i][j].contains == "red" and matrix[i+1][j+1].contains == "red" and matrix[i+2][j+2].contains == "red" and matrix[i+3][j+3].contains == "red":
+                            return -1
+                    elif (j >= 3):
+                        if matrix[i][j].contains == "black" and matrix[i+1][j-1].contains == "black" and matrix[i+2][j-2].contains == "black" and matrix[i+3][j-3].contains == "black":
+                            return 1
+                        elif matrix[i][j].contains == "red" and matrix[i+1][j-1].contains == "red" and matrix[i+2][j-2].contains == "red" and matrix[i+3][j-3].contains == "red":
+                            return -1
         return None
 
-    def square(self, goal=4):
+    def square(self, goal):
+        matrix = self.board.cells
+        for i in range(5):
+            for j in range(5):
+                if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
+                    if (j < 3):
+                        if matrix[i][j].contains == "black" and matrix[i+1][j].contains == "black" and matrix[i][j+1].contains == "black" and matrix[i+1][j+1].contains == "black":
+                            return 1
+                    elif (j >= 3):
+                        if matrix[i][j].contains == "red" and matrix[i+1][j].contains == "red" and matrix[i][j+1].contains == "red" and matrix[i+1][j+1].contains == "red":
+                            return -1
         return None
 
-    def checkWinner(self, goal=4):
-        winner = self.horizontal(goal)
+    def checkWinner(self):
+        winner = self.horizontal(self)
         if winner != None:
             return winner
-        winner = self.vertical(goal)
+        winner = self.vertical(self)
         if winner != None:
             return winner
-        winner = self.diagonal(goal)
+        winner = self.diagonal(self)
         if winner != None:
             return winner
-        winner = self.square(goal)
+        winner = self.square(self)
         if winner != None:
             return winner
 
