@@ -64,21 +64,14 @@ class Match:
         limitY = (posY >= 0) and (posY < self.board.size)
         return limitX and limitY
 
-    # Only valid when we put the first 4 markers
-    def freecells(self, enemyColor):
-        freeCells = []
-        matrix = self.board.cells
-        # board limits?
-        for list in matrix:
-            for cell in list:
-                if cell.contains != enemyColor:
-                    freeCells.append(cell)
-        return freeCells
+    def on_range(self, posX, posY):
+        limitX = (posX >= 0) and (posX <= self.board.size)
+        limitY = (posY >= 0) and (posY <= self.board.size)
+        return limitX and limitY
 
     # Valid once we placed the markers
     def adyacentMove(self, cell):
         actions = []
-        matrix = self.board.cells
         directions = [
             [-1, -1], [-1, 0], [-1, +1],
             [0, -1], [0, +1],
@@ -88,16 +81,17 @@ class Match:
         for i in directions:
             adx = int(cell.posX) + i[0]
             ady = int(cell.posY) + i[1]
-            # print(matrix[cell.posY][cell.posX].contains)
-            if self.boardlimits(adx, ady) and str(matrix[cell.posY][cell.posX].contains) == "None":
-                actions.append([adx, ady])
+            if self.boardlimits(adx, ady):
+                matrix = self.board.cells[ady][adx]
+                if str(matrix.contains) == "None":
+                    actions.append([ady, adx])
 
         return actions
 
     def isAdy(self, cell, actions):
         adx = int(cell.posX)
         ady = int(cell.posY)
-        if [adx, ady] in actions:
+        if [ady, adx] in actions:
             return True
         return False
 
@@ -112,7 +106,6 @@ class Match:
                 print('ya existe una pieza tuya aqui')
                 return False
             else:
-                print('Movimiento valido')
                 return True
 
     def isPlayers(self, cell, playercolor):

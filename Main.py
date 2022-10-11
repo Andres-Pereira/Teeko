@@ -29,9 +29,10 @@ def play():
             p1Y = pos[0]
             p1Y = charToNum[p1Y]
             p1X = pos[1]
-            cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
-            valid = match.isValid(
-                cell, player2.playerColor)
+            if match.on_range(int(p1X), int(p1Y)):
+                cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
+                valid = match.isValid(cell, player2.playerColor)
+            else: print("Out of limits")
 
         match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
 
@@ -45,9 +46,10 @@ def play():
             p2Y = pos[0]
             p2Y = charToNum[p2Y]
             p2X = pos[1]
-            cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
-            valid = match.isValid(
-                cell, player1.playerColor)
+            if match.on_range(int(p2X), int(p2Y)):
+                cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
+                valid = match.isValid(cell, player1.playerColor)
+            else: print("Out of limits")
 
         match.board.place_marker(int(p2X)-1, int(p2Y), player2.playerColor)
 
@@ -65,25 +67,29 @@ def play():
             p1Y = pos[0]
             p1Y = charToNum[p1Y]
             p1X = pos[1]
-            cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
-            playersMarker = match.isPlayers(cell, player1.playerColor)
+            if match.on_range(int(p1X), int(p1Y)):
+                cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
+                playersMarker = match.isPlayers(cell, player1.playerColor)
+            else: print("Out of limits")
 
         ad = match.adyacentMove(cell)
-        match.board.remove_marker(int(p2X)-1, int(p2Y))
+        match.board.remove_marker(int(p1X)-1, int(p1Y))
 
         valid = False
         ady = False
-        while valid == False and ady == False:
-            print("Where do you want to move?")
-            print(ad)
-            pos = input("Enter a position: ")
-            p1Y = pos[0]
-            p1Y = charToNum[p1Y]
-            p1X = pos[1]
-            cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
-            valid = match.isValid(
-                cell, player2.playerColor)
-            ady = match.isAdy(cell, ad)
+        while valid == False:
+            while ady == False:
+                print("Where do you want to move?")
+                print(ad)
+                pos = input("Enter a position: ")
+                p1Y = pos[0]
+                p1Y = charToNum[p1Y]
+                p1X = pos[1]
+                if match.on_range(int(p1X), int(p1Y)):
+                    cell = Cell(int(p1X)-1, int(p1Y), player1.playerColor)
+                    valid = match.isValid(cell, player2.playerColor)
+                    ady = match.isAdy(cell, ad)
+                else: print("Out of limits")
 
         match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
         mat = board.__str__()
@@ -98,26 +104,31 @@ def play():
             p2Y = pos[0]
             p2Y = charToNum[p2Y]
             p2X = pos[1]
-            playersMarker = match.isPlayers(cell, player2.playerColor)
+            if match.on_range(int(p2X), int(p2Y)):
+                cell = Cell(int(p2X) - 1, int(p2Y), player2.playerColor)
+                playersMarker = match.isPlayers(cell, player2.playerColor)
+            else: print("Out of limits")
 
         ad = match.adyacentMove(cell)
         match.board.remove_marker(int(p2X)-1, int(p2Y))
 
         valid = False
         ady = False
-        while valid == False and ady == False:
-            print("Where do you want to move?")
-            print(ad)
-            pos = input("Enter a position: ")
-            p2Y = pos[0]
-            p2Y = charToNum[p2Y]
-            p2X = pos[1]
-            cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
-            valid = match.isValid(
-                cell, player1.playerColor)
-            ady = match.isAdy(cell, ad)
+        while valid == False:
+            while ady == False:
+                print("Where do you want to move?")
+                print(ad)
+                pos = input("Enter a position: ")
+                p2Y = pos[0]
+                p2Y = charToNum[p2Y]
+                p2X = pos[1]
+                if match.on_range(int(p2X), int(p2Y)):
+                    cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
+                    valid = match.isValid(cell, player1.playerColor)
+                    ady = match.isAdy(cell, ad)
+                else: print("Out of limits")
 
-        match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
+        match.board.place_marker(int(p2X)-1, int(p2Y), player2.playerColor)
         mat = board.__str__()
         print(mat)
         winner = match.checkWinner()
