@@ -1,54 +1,42 @@
 from teeko import Board, Match, Player, Cell
 
+# implementar actions para que sea mas generico
+
 
 class State:
-    def __init__(self):
-        self.utility = None
+    def __init__(self, match):
+        self.match = match
+        self.utility = 0
+
+    def __str__(self):
+        return self.match.board_status()
 
     def utility_function(self, state):
-        #cantidad de movimientos que tomo llegar a la victoria
-        return False
-
+        return 0
 
     def terminal_test(self, player):
-        #verificar si el juego ya llego a un estado terminal
-        return False
+        actions = self.match.actions(player)
+        return len(actions) == 0
 
 
-
-class IA:
-    # black=max red=min
-    def __init__(self, initialState):
-        self.initialState = initialState
-
-    def min_max_desicion(self, state, player):
-        if (player.playerColor == "black"):
-            #retorna un estado? como obtenerlo?
-            max = self.min_value(Result(S,a))
-            return max
-        else:
-            min = self.max_value(Result(S,a))
-            return min
-
-    def min_value(self, state):
-        if (state.terminal_test(state)):
+    def min_value(self, state, player):
+        actions = []
+        if state.terminal_test(player):
             return state.utility_function(state)
-        v = 1000
+        v = 10000000
 
-        #entender que es Result(S,a)
-        #actions deberia ser un metodo que expande el estado mostrando sus acciones
 
-        for a in Actions(state):
-            v = Min(v, self.max_value(Result(S,a))
 
-        #ver como retornar un estado y no un valor
-        return v
+def play_game():
+    board = Board()
+    board.initializateboard()
+    playerOne = Player("black")
+    playerTwo = Player("white")
+    match = Match(board)
+    initialState = State(match)
+    print(initialState)
+    match.board.place_marker(0, 0, playerOne.playerColor)
+    changedState = State(match)
+    print(changedState)
 
-    def max_value(self, state):
-        if (state.terminal_test(state)):
-            return state.utility_function(state)
-        min = -1000
-
-        for a in Actions(state):
-            v = Max(v, self.min_value(Result(S, a)))
-        return v
+play_game()

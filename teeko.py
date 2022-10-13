@@ -58,6 +58,9 @@ class Match:
     def __init__(self, board):
         self.board = board
 
+    def board_status(self):
+        return str(self.board)
+
     def boardlimits(self, posX, posY):
         limitX = (posX >= 0) and (posX < self.board.size)
         limitY = (posY >= 0) and (posY < self.board.size)
