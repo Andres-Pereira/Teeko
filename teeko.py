@@ -118,6 +118,17 @@ class Match:
         return False
 
     # Validation for a winner
+    def countPieces(self):
+        matrix = self.board.cells
+        blackPieces = 0
+        redPieces = 0
+        for i in range(5):
+            for j in range(5):
+                if matrix[i][j].contains == 'red':
+                    redPieces += 1
+                elif matrix[i][j].contains == 'black':
+                    blackPieces += 1
+        return redPieces + blackPieces
 
     def horizontal(self, goal):
         matrix = self.board.cells

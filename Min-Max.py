@@ -22,6 +22,23 @@ class IA:
     def utility_function(self, state):
         return 0
 
+    def Result(self, state, action):
+        return 0
+
+    def Actions(self, state):
+        matrix = state.match.board.cells
+        actions = []
+        for i in range(5):
+            for j in range(5):
+                if matrix[i][j].contains == 'red':
+                    actions.append(state.match.adyacentMove(matrix[i][j]))
+                elif matrix[i][j].contains == None and state.match.countPieces() < 8:
+                    actions.append([i, j])
+
+        print(actions)
+        print(len(actions))
+        return actions
+
     def minmax_decision(self, initialState, player):
         if player.playerColor == "black":
             # retorna una accion asociada al valor, plantear eso
@@ -51,11 +68,12 @@ class IA:
         v = max(v, self.min_value(state))
         return v
 
-def play_game():
+
+def testActions():
     board = Board()
     board.initializateboard()
     playerOne = Player("black")
-    playerTwo = Player("white")
+    playerTwo = Player("red")
     match = Match(board)
     initialState = State(match)
     ia = IA(initialState)
@@ -64,8 +82,36 @@ def play_game():
     match.board.place_marker(0, 1, playerOne.playerColor)
     match.board.place_marker(0, 2, playerOne.playerColor)
     match.board.place_marker(0, 3, playerOne.playerColor)
+
+    match.board.place_marker(1, 0, playerTwo.playerColor)
+    match.board.place_marker(1, 1, playerTwo.playerColor)
+    match.board.place_marker(1, 2, playerTwo.playerColor)
+    match.board.place_marker(1, 3, playerTwo.playerColor)
+
+    changedState = State(match)
+    print(changedState)
+    ia.Actions(changedState)
+    ia.min_value(changedState)
+
+
+def play_game():
+    board = Board()
+    board.initializateboard()
+    playerOne = Player("black")
+    playerTwo = Player("red")
+    match = Match(board)
+    initialState = State(match)
+    ia = IA(initialState)
+    print(initialState)
+    match.board.place_marker(0, 0, playerOne.playerColor)
+    match.board.place_marker(0, 1, playerOne.playerColor)
+    match.board.place_marker(0, 2, playerOne.playerColor)
+    match.board.place_marker(0, 3, playerOne.playerColor)
+
     changedState = State(match)
     print(changedState)
     ia.min_value(changedState)
 
-play_game()
+
+testActions()
+# play_game()
