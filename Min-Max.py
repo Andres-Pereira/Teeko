@@ -22,15 +22,12 @@ class IA:
     def utility_function(self, state):
         return 0
 
-    def Result(self, state, action):
-        return 0
-
     def Actions(self, state):
         matrix = state.match.board.cells
         actions = []
         for i in range(5):
             for j in range(5):
-                if matrix[i][j].contains == 'red':
+                if matrix[i][j].contains == 'red' and state.match.countPieces() >= 8:
                     actions.append(state.match.adyacentMove(matrix[i][j]))
                 elif matrix[i][j].contains == None and state.match.countPieces() < 8:
                     actions.append([i, j])
@@ -38,6 +35,12 @@ class IA:
         print(actions)
         print(len(actions))
         return actions
+
+    def Result(self, state, action, player):
+        p1y = action[0]
+        p1x = action[1]
+        state.match.board.place_marker(p1y, p1x, player.playerColor)
+        return state
 
     def minmax_decision(self, initialState, player):
         if player.playerColor == "black":
@@ -49,23 +52,21 @@ class IA:
             return min
 
     def min_value(self, state):
-        actions = []
-        # Caso base, indica que estamos en una hoja del arbol
+        actions = self.Actions(state)
         if self.terminal_test(state):
             return self.utility_function(state)
         v = 10000000
-        # iterar en actions
-        v = min(v, self.max_value(state))
+        for a in actions:
+            v = min(v, self.max_value(self.Result(state, a,)))
         return v
 
     def max_value(self, state):
-        actions = []
-        # Caso base, indica que estamos en una hoja del arbol
+        actions = self.Actions(state)
         if self.terminal_test(state):
             return self.utility_function(state)
-        v = 10000000
-        # iterar en actions
-        v = max(v, self.min_value(state))
+        v = -10000000
+        for a in actions:
+            v = max(v, self.min_value(state))
         return v
 
 
@@ -107,11 +108,12 @@ def play_game():
     match.board.place_marker(0, 1, playerOne.playerColor)
     match.board.place_marker(0, 2, playerOne.playerColor)
     match.board.place_marker(0, 3, playerOne.playerColor)
-
     changedState = State(match)
     print(changedState)
+    result = ia.Result(changedState, [4, 4], playerTwo)
+    print(result)
     ia.min_value(changedState)
 
 
-testActions()
-# play_game()
+#testActions()
+play_game()
