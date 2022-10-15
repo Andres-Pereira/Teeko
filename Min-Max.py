@@ -63,32 +63,95 @@ class IA:
         state.match.board.place_marker(p1y, p1x, player.playerColor)
         return state
 
+    def result(self, state, action):
+        p1y = action[0]
+        p1x = action[1]
+        state.match.board.place_marker(p1y, p1x, 'red')
+        return state
+
     def minmax_decision(self, initialState, player):
+        actions = self.Actions(initialState)
         if player.playerColor == "black":
-            # retorna una accion asociada al valor, plantear eso
-            max = self.min_value(initialState)
-            return max
+            values = []
+            for a in actions:
+                v = self.min_value(self.result(initialState, a))
+                values.append(v)
+            idx = np.argmax(values)
+            return self.Actions(initialState)[idx]
         else:
-            min = self.max_value(initialState)
-            return min
+            values = []
+            for a in self.Actions(initialState):
+                v = self.max_value(self.result(initialState, a))
+                values.append(v)
+            idx = np.argmin(values)
+            return self.Actions(initialState)[idx]
 
     def min_value(self, state):
-        actions = self.Actions(state)
         if self.terminal_test(state):
-            return self.utility_function(state)
-        v = 10000000
+            return state.match.checkWinner()
+        actions = self.Actions(state)
+        v = 10000
         for a in actions:
-            v = min(v, self.max_value(self.Result(state, a,)))
+            v = min(v, self.max_value(self.result(state, a)))
         return v
 
     def max_value(self, state):
+        if self.terminal_test(state):
+            return state.match.checkWinner()
+        actions = self.Actions(state)
+        # array visitados
+        # si result da un estado visitado ignorar
+        v = -10000
+        for a in actions:
+            v = max(v, self.min_value(self.result(state, a)))
+        return v
+
+    # Alpha Beta
+
+    def minmax_decision_AB(self, initialState, player, alpha, beta):
+        actions = self.Actions(initialState)
+        if player.playerColor == "black":
+            values = []
+            for a in actions:
+                v = self.min_value_AB(self.result(
+                    initialState, a), alpha, beta)
+                values.append(v)
+            idx = np.argmax(values)
+            return self.Actions(initialState)[idx]
+        else:
+            values = []
+            for a in self.Actions(initialState):
+                v = self.max_value_AB(self.result(
+                    initialState, a), alpha, beta)
+                values.append(v)
+            idx = np.argmin(values)
+            return self.Actions(initialState)[idx]
+
+    def min_value_AB(self, state, alpha, beta):
         actions = self.Actions(state)
         if self.terminal_test(state):
-            return self.utility_function(state)
-        v = -10000000
+            return state.match.checkWinner()
+        v = 10000
         for a in actions:
-            v = max(v, self.min_value(state))
+            v = min(v, self.max_value_AB(self.result(state, a), alpha, beta))
+            if v <= alpha:
+                return v
+            beta = min(beta, v)
         return v
+
+    def max_value_AB(self, state, alpha, beta):
+        actions = self.Actions(state)
+        if self.terminal_test(state):
+            return state.match.checkWinner()
+        v = -10000
+        for a in actions:
+            v = max(v, self.min_value_AB(self.result(state, a), alpha, beta))
+            if v >= beta:
+                return v
+            alpha = max(alpha, v)
+        return v
+
+    #
 
 
 def testActions():
@@ -135,6 +198,7 @@ def play_game():
     print(result)
     ia.min_value(changedState)
 
+
 def testUtilities():
     board = Board()
     board.initializateboard()
@@ -158,6 +222,49 @@ def testUtilities():
     ut = ia.utility_function(currentState)
     print(ut)
 
+
+def testMinmax_AB():
+    alpha = -10000
+    beta = 10000
+    board = Board()
+    board.initializateboard()
+    playerOne = Player("black")
+    playerTwo = Player("red")
+    match = Match(board)
+    initialState = State(match)
+    ia = IA(initialState)
+    print(initialState)
+    match.board.place_marker(0, 0, playerOne.playerColor)
+    match.board.place_marker(0, 1, playerOne.playerColor)
+    match.board.place_marker(0, 2, playerOne.playerColor)
+    match.board.place_marker(0, 3, playerOne.playerColor)
+    changedState = State(match)
+    print(changedState)
+    state = ia.minmax_decision_AB(changedState, playerTwo, alpha, beta)
+    print(state)
+
+
+def testMinmax():
+    board = Board()
+    board.initializateboard()
+    playerOne = Player("black")
+    playerTwo = Player("red")
+    match = Match(board)
+    initialState = State(match)
+    ia = IA(initialState)
+    print(initialState)
+    match.board.place_marker(0, 0, playerOne.playerColor)
+    match.board.place_marker(0, 1, playerOne.playerColor)
+    match.board.place_marker(0, 2, playerOne.playerColor)
+    match.board.place_marker(0, 3, playerOne.playerColor)
+    changedState = State(match)
+    print(changedState)
+    state = ia.minmax_decision(changedState, playerTwo)
+    print(state)
+
+
 # testActions()
 # play_game()
-testUtilities()
+testMinmax()
+# testMinmax_AB()
+# testUtilities()
