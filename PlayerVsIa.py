@@ -6,10 +6,10 @@ def vs():
     alpha = -10000
     beta = 10000
     board = Board()
+    match = Match(board)
     board.initializateboard()
     player1 = Player("black")
     player2 = Player("red")
-    match = Match(board)
     initialState = State(match)
     ia = IA(initialState)
     charToNum = {
@@ -26,7 +26,7 @@ def vs():
 
     }
     winner = None
-    match = Match(board)
+
     for i in range(4):
         print("Black's turn")
         valid = False
@@ -41,20 +41,28 @@ def vs():
             else:
                 print("Out of limits")
 
+        '''match.board.place_marker(0, 0, player1.playerColor)
+        match.board.place_marker(1, 0, player1.playerColor)
+        match.board.place_marker(2, 0, player1.playerColor)
+        match.board.place_marker(3, 0, player1.playerColor)'''
         match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
-        match.board.place_marker(0, 0, player1.playerColor)
-
-        mat = board.__str__()
-        print(mat)
-
-        print("Red's turn")
         changedState = State(match)
-        state = ia.minmax_decision_WDAB(initialState, player2, alpha, beta)
-        print(state)
-        match.board.place_marker(state[0][1], state[0][0], player2.playerColor)
+        print(changedState)
+        print("Red's turn")
+        valid = False
+        while valid == False:
+            state = ia.minmax_decision_WDAB(changedState, player2, alpha, beta)
+            if match.on_range(state[1], state[0]):
+                cell = Cell(state[1], state[0], player2.playerColor)
+                valid = match.isValid(cell, player1.playerColor)
+            else:
+                print("Out of limits")
 
-        mat = board.__str__()
-        print(mat)
+        print(state)
+        match.board.place_marker(state[1], state[0], player2.playerColor)
+
+        changedState = State(match)
+        print(changedState)
 
     winner = match.checkWinner()
     # ------------------------------------------------------------------------
