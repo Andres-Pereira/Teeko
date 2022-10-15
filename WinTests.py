@@ -160,7 +160,7 @@ def testVertical():
     match.shoWinner(winner)
 
 
-lastTests()
+# lastTests()
 # testSquare()
 # testDiagonal2()
 # testDiagonal()

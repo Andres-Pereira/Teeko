@@ -22,6 +22,12 @@ class Board:
             c = + 1
         return matrix
 
+    def copy(self):
+        copyBoard = Board(self.size)
+        for row in self.cells:
+            copyBoard.cells.append([cell.copy() for cell in row])
+        return copyBoard
+
     def initializateboard(self):
         for j in range(self.size):
             row = []
@@ -30,7 +36,10 @@ class Board:
             self.cells.append(row)
 
     def place_marker(self, posX, posY, marker):
-        position = self.cells[posY][posX]
+        if (type(posX) != int and type(posY) != int):
+            position = self.cells[posY[0]][posX[0]]
+        else:
+            position = self.cells[posY][posX]
         position.contains = marker
 
     def remove_marker(self, posX, posY):
@@ -53,10 +62,21 @@ class Cell:
         if self.contains == "red":
             return "2"
 
+    def copy(self):
+        copyCell = Cell(self.posX, self.posY, self.contains)
+        return copyCell
+
 
 class Match:
     def __init__(self, board):
         self.board = board
+
+    def change_board(self, board):
+        self.board = board
+
+    def copy(self):
+        copyMatch = Match(self.board.copy())
+        return copyMatch
 
     def board_status(self):
         return str(self.board)
@@ -179,12 +199,12 @@ class Match:
         for i in range(5):
             for j in range(5):
                 if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
-                    if (j < 3 and i < 3):
+                    if (j < 2 and i < 2):
                         if matrix[i][j].contains == "black" and matrix[i+1][j+1].contains == "black" and matrix[i+2][j+2].contains == "black" and matrix[i+3][j+3].contains == "black":
                             return 1
                         elif matrix[i][j].contains == "red" and matrix[i+1][j+1].contains == "red" and matrix[i+2][j+2].contains == "red" and matrix[i+3][j+3].contains == "red":
                             return -1
-                    elif (j >= 3 and i < 3):
+                    elif (j >= 3 and i < 2):
                         if matrix[i][j].contains == "black" and matrix[i+1][j-1].contains == "black" and matrix[i+2][j-2].contains == "black" and matrix[i+3][j-3].contains == "black":
                             return 1
                         elif matrix[i][j].contains == "red" and matrix[i+1][j-1].contains == "red" and matrix[i+2][j-2].contains == "red" and matrix[i+3][j-3].contains == "red":
@@ -199,7 +219,7 @@ class Match:
                     if (j < 3):
                         if matrix[i][j].contains == "black" and matrix[i+1][j].contains == "black" and matrix[i][j+1].contains == "black" and matrix[i+1][j+1].contains == "black":
                             return 1
-                    elif (j >= 3 and i < 3):
+                    elif (j <= 3 and i < 3):
                         if matrix[i][j].contains == "red" and matrix[i+1][j].contains == "red" and matrix[i][j+1].contains == "red" and matrix[i+1][j+1].contains == "red":
                             return -1
         return None
