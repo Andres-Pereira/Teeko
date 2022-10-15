@@ -329,9 +329,9 @@ def testUtilities():
     #match.board.place_marker(3, 2, playerOne.playerColor)
 
     match.board.place_marker(1, 4, playerTwo.playerColor)
-    match.board.place_marker(3, 1, playerTwo.playerColor)
-    match.board.place_marker(3, 0, playerTwo.playerColor)
-    match.board.place_marker(3, 2, playerTwo.playerColor)
+    match.board.place_marker(4, 2, playerTwo.playerColor)
+    match.board.place_marker(2, 0, playerTwo.playerColor)
+    match.board.place_marker(3, 3, playerTwo.playerColor)
     currentState = State(match)
     print(currentState)
     ut = ia.utility_function(currentState)
