@@ -22,6 +22,12 @@ class Board:
             c = + 1
         return matrix
 
+    def copy(self):
+        copyBoard = Board(self.size)
+        for row in self.cells:
+            copyBoard.cells.append([cell.copy() for cell in row])
+        return copyBoard
+
     def initializateboard(self):
         for j in range(self.size):
             row = []
@@ -53,10 +59,21 @@ class Cell:
         if self.contains == "red":
             return "2"
 
+    def copy(self):
+        copyCell = Cell(self.posX, self.posY, self.contains)
+        return copyCell
+
 
 class Match:
     def __init__(self, board):
         self.board = board
+
+    def change_board(self, board):
+        self.board = board
+
+    def copy(self):
+        copyMatch = Match(self.board.copy())
+        return copyMatch
 
     def board_status(self):
         return str(self.board)

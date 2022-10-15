@@ -6,9 +6,70 @@ class State:
     def __init__(self, match):
         self.match = match
         self.utility = 0
+        self.max_depth = 3
 
     def __str__(self):
         return self.match.board_status()
+
+    def copy(self):
+        copySate = State(self.match)
+        return copySate
+
+    def result(self, action):
+        p1y = action[0]
+        p1x = action[1]
+        #state = state.copy()
+        self.match.board.place_marker(p1y, p1x, 'red')
+        return self
+
+    def terminal_test(self):
+        return self.match.checkWinner()
+
+    def Actions(self):
+        matrix = self.match.board.cells
+        actions = []
+        for i in range(5):
+            for j in range(5):
+                if matrix[i][j].contains == 'red' and self.match.countPieces() >= 8:
+                    actions.append(self.match.adyacentMove(matrix[i][j]))
+                elif matrix[i][j].contains == None and self.match.countPieces() < 8:
+                    actions.append([i, j])
+
+        # print(actions)
+        # print(len(actions))
+        return actions
+
+    def utility_function(self):
+        matrix = self.match.board.cells
+        # piezas juntas max +1 | si de adyacente tiene max se suma puntos, si de adyacente tiene min se restan
+        # piezas juntas min -1 | si de adyacente tiene min se resta puntos, si es max se suman
+        # si el oponente tiene una pieza junto a otra es correcto obstaculizarlo
+
+        winner = self.match.checkWinner()
+        value = 0
+        if winner != None:
+            return 100 * self.match.checkWinner()
+        else:
+            boardValues = [
+                [0, 1, 0, 1, 0],
+                [1, 2, 2, 2, 1],
+                [0, 2, 3, 2, 0],
+                [1, 2, 2, 2, 1],
+                [0, 1, 0, 1, 0]
+            ]
+            for x in range(5):
+                for y in range(5):
+                    if matrix[x][y].contains == "black":
+                        value = value + 1 * boardValues[x][y]
+                    if matrix[x][y].contains == "red":
+                        value = value + -1 * boardValues[x][y]
+        return value
+
+    def cut_of(self, depth):
+        if (depth == self.max_depth or self.terminal_test() != None):
+            return True
+        else:
+            return False
 
 
 class IA:
@@ -55,8 +116,8 @@ class IA:
                 elif matrix[i][j].contains == None and state.match.countPieces() < 8:
                     actions.append([i, j])
 
-        print(actions)
-        print(len(actions))
+        # print(actions)
+        # print(len(actions))
         return actions
 
     def Result(self, state, action, player):
@@ -68,6 +129,7 @@ class IA:
     def result(self, state, action):
         p1y = action[0]
         p1x = action[1]
+        #state = state.copy()
         state.match.board.place_marker(p1y, p1x, 'red')
         return state
 
@@ -155,7 +217,58 @@ class IA:
 
     # MINMAX WITH DEPTH WITH ALPHA BETA
 
-    def cut_of(self, state, depth):
+    '''def cut_of(state, depth):
+        if (depth == state.max_depth or state.terminal_test(state) != None):
+            return True
+        else:
+            return False'''
+
+    def minmax_decision_WDAB(self, initialState, player, alpha, beta):
+        actions = initialState.Actions()
+        if player.playerColor == "black":
+            values = []
+            for a in actions:
+                v = self.min_value_WDAB(initialState.result(
+                    a), alpha, beta, 0)
+                values.append(v)
+            idx = np.argmax(values)
+            return initialState.Actions()[idx]
+        else:
+            values = []
+            for a in initialState.Actions():
+                v = self.max_value_WDAB(initialState.result(
+                    a), alpha, beta, 0)
+                values.append(v)
+            idx = np.argmin(values)
+            return initialState.Actions()[idx]
+
+    def min_value_WDAB(self, state, alpha, beta, depth):
+
+        if state.cut_of(depth):
+            return state.utility_function()
+        actions = state.Actions()
+        v = 10000
+        for a in actions:
+            v = min(v, self.max_value_WDAB(
+                state.result(a), alpha, beta, depth+1))
+            if v <= alpha:
+                return v
+            beta = min(beta, v)
+        return v
+
+    def max_value_WDAB(self, state, alpha, beta, depth):
+        if state.cut_of(depth):
+            return state.utility_function()
+        actions = state.Actions()
+        v = -10000
+        for a in actions:
+            v = max(v, self.min_value_WDAB(
+                state.result(a), alpha, beta, depth+1))
+            if v >= beta:
+                return v
+            alpha = max(alpha, v)
+        return v
+    '''def cut_of(self, state, depth):
         if (depth == self.max_depth or self.terminal_test(state) != None):
             return True
         else:
@@ -166,16 +279,16 @@ class IA:
         if player.playerColor == "black":
             values = []
             for a in actions:
-                v = self.min_value_WDAB(self.result(
-                    initialState, a), alpha, beta, 0)
+                v = self.min_value_WDAB(initialState.result(
+                    a), alpha, beta, 0)
                 values.append(v)
             idx = np.argmax(values)
             return self.Actions(initialState)[idx]
         else:
             values = []
             for a in self.Actions(initialState):
-                v = self.max_value_WDAB(self.result(
-                    initialState, a), alpha, beta, 0)
+                v = self.max_value_WDAB(initialState.result(
+                    a), alpha, beta, 0)
                 values.append(v)
             idx = np.argmin(values)
             return self.Actions(initialState)[idx]
@@ -187,7 +300,7 @@ class IA:
         v = 10000
         for a in actions:
             v = min(v, self.max_value_WDAB(
-                self.result(state, a), alpha, beta, depth+1))
+                state.result(a), alpha, beta, depth+1))
             if v <= alpha:
                 return v
             beta = min(beta, v)
@@ -200,11 +313,11 @@ class IA:
         v = -10000
         for a in actions:
             v = max(v, self.min_value_WDAB(
-                self.result(state, a), alpha, beta, depth+1))
+                state.result(a), alpha, beta, depth+1))
             if v >= beta:
                 return v
             alpha = max(alpha, v)
-        return v
+        return v'''
 
 
 def testActions():
@@ -215,6 +328,7 @@ def testActions():
     match = Match(board)
     initialState = State(match)
     ia = IA(initialState)
+
     print(initialState)
     match.board.place_marker(0, 0, playerOne.playerColor)
     match.board.place_marker(0, 1, playerOne.playerColor)
@@ -285,16 +399,19 @@ def testMinmax_WDAB():
     playerTwo = Player("red")
     match = Match(board)
     initialState = State(match)
+    stateCopy = initialState
     ia = IA(initialState)
     print(initialState)
-    match.board.place_marker(0, 0, playerOne.playerColor)
-    match.board.place_marker(0, 1, playerOne.playerColor)
-    match.board.place_marker(0, 2, playerOne.playerColor)
-    match.board.place_marker(0, 3, playerOne.playerColor)
-    changedState = State(match)
-    print(changedState)
-    state = ia.minmax_decision_WDAB(changedState, playerTwo, alpha, beta)
+    initialState.match.board.place_marker(0, 0, playerOne.playerColor)
+    initialState.match.board.place_marker(0, 1, playerOne.playerColor)
+    '''initialState.match.board.place_marker(0, 2, playerOne.playerColor)
+    initialState.match.board.place_marker(0, 3, playerOne.playerColor)'''
+    print(stateCopy)
+    state = ia.minmax_decision_WDAB(stateCopy, playerTwo, alpha, beta)
     print(state)
+    # match.board.place_marker(
+    #   state[0][1], state[0][0], playerTwo.playerColor)
+    print(initialState)
 
 
 def testMinmax_AB():
@@ -341,7 +458,5 @@ def testMinmax():
 # play_game()
 # testMinmax()
 # testMinmax_AB()
-
-a = testMinmax_WDAB()
-print(a)
+testMinmax_WDAB()
 # testUtilities()
