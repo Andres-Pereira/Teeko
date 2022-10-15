@@ -43,12 +43,17 @@ class IA:
                         value = value + 1 * boardValues[x][y]
                     if matrix[x][y].contains == "red":
                         value = value + -1 * boardValues[x][y]
-            # 5
             for ad in range(2):
                 adv = ad + 2
-                advantage = state.match.checkAdvantage(adv)
-                if advantage != None:
-                    value = value + advantage * 5
+                vertical = state.match.vertical(adv)
+                if vertical != None:
+                    value = value + vertical * 5
+                horizontal = state.match.horizontal(adv)
+                if horizontal != None:
+                    value = value + horizontal * 5
+                diag = state.match.diagonal2(adv)
+                if diag != None:
+                    value = value + diag * 5
 
         return value
 
@@ -328,10 +333,10 @@ def testUtilities():
     #match.board.place_marker(3, 1, playerOne.playerColor)
     #match.board.place_marker(3, 2, playerOne.playerColor)
 
-    match.board.place_marker(1, 4, playerTwo.playerColor)
-    match.board.place_marker(4, 2, playerTwo.playerColor)
-    match.board.place_marker(2, 0, playerTwo.playerColor)
-    match.board.place_marker(3, 3, playerTwo.playerColor)
+    match.board.place_marker(4, 1, playerTwo.playerColor)
+    match.board.place_marker(4, 0, playerTwo.playerColor)
+    match.board.place_marker(3, 1, playerTwo.playerColor)
+    match.board.place_marker(2, 2, playerTwo.playerColor)
     currentState = State(match)
     print(currentState)
     ut = ia.utility_function(currentState)
