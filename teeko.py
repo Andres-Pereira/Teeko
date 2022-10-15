@@ -166,9 +166,9 @@ class Match:
                     red += 1
                 else:
                     red = 0
-                if black == 4:
+                if black == goal:
                     return 1
-                if red == 4:
+                if red == goal:
                     return -1
         return None
 
@@ -188,9 +188,9 @@ class Match:
                     red += 1
                 else:
                     red = 0
-                if black == 4:
+                if black == goal:
                     return 1
-                if red == 4:
+                if red == goal:
                     return -1
         return None
 
@@ -225,16 +225,33 @@ class Match:
         return None
 
     def checkWinner(self):
-        winner = self.horizontal(self)
+        goal = 4
+        winner = self.horizontal(goal)
         if winner != None:
             return winner
-        winner = self.vertical(self)
+        winner = self.vertical(goal)
         if winner != None:
             return winner
         winner = self.diagonal(self)
         if winner != None:
             return winner
         winner = self.square(self)
+        if winner != None:
+            return winner
+
+        return winner
+
+    def checkAdvantage(self, goal):
+        winner = self.horizontal(goal)
+        if winner != None:
+            return winner
+        winner = self.vertical(goal)
+        if winner != None:
+            return winner
+        winner = self.diagonal(goal)
+        if winner != None:
+            return winner
+        winner = self.square(goal)
         if winner != None:
             return winner
 
