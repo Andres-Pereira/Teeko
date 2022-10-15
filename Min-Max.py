@@ -1,4 +1,5 @@
 from teeko import Board, Match, Player, Cell
+import numpy as np
 
 
 class State:
@@ -13,6 +14,7 @@ class State:
 class IA:
     def __init__(self, initialState):
         self.initalState = initialState
+        self.max_depth = 3
 
     def terminal_test(self, state):
         return state.match.checkWinner()
@@ -128,9 +130,9 @@ class IA:
             return self.Actions(initialState)[idx]
 
     def min_value_AB(self, state, alpha, beta):
-        actions = self.Actions(state)
         if self.terminal_test(state):
             return state.match.checkWinner()
+        actions = self.Actions(state)
         v = 10000
         for a in actions:
             v = min(v, self.max_value_AB(self.result(state, a), alpha, beta))
@@ -140,9 +142,9 @@ class IA:
         return v
 
     def max_value_AB(self, state, alpha, beta):
-        actions = self.Actions(state)
         if self.terminal_test(state):
             return state.match.checkWinner()
+        actions = self.Actions(state)
         v = -10000
         for a in actions:
             v = max(v, self.min_value_AB(self.result(state, a), alpha, beta))
@@ -151,7 +153,58 @@ class IA:
             alpha = max(alpha, v)
         return v
 
-    #
+    # MINMAX WITH DEPTH WITH ALPHA BETA
+
+    def cut_of(self, state, depth):
+        if (depth == self.max_depth or self.terminal_test(state) != None):
+            return True
+        else:
+            return False
+
+    def minmax_decision_WDAB(self, initialState, player, alpha, beta):
+        actions = self.Actions(initialState)
+        if player.playerColor == "black":
+            values = []
+            for a in actions:
+                v = self.min_value_WDAB(self.result(
+                    initialState, a), alpha, beta, 0)
+                values.append(v)
+            idx = np.argmax(values)
+            return self.Actions(initialState)[idx]
+        else:
+            values = []
+            for a in self.Actions(initialState):
+                v = self.max_value_WDAB(self.result(
+                    initialState, a), alpha, beta, 0)
+                values.append(v)
+            idx = np.argmin(values)
+            return self.Actions(initialState)[idx]
+
+    def min_value_WDAB(self, state, alpha, beta, depth):
+        if self.cut_of(state, depth):
+            return self.utility_function(state)
+        actions = self.Actions(state)
+        v = 10000
+        for a in actions:
+            v = min(v, self.max_value_WDAB(
+                self.result(state, a), alpha, beta, depth+1))
+            if v <= alpha:
+                return v
+            beta = min(beta, v)
+        return v
+
+    def max_value_WDAB(self, state, alpha, beta, depth):
+        if self.cut_of(state, depth):
+            return self.utility_function(state)
+        actions = self.Actions(state)
+        v = -10000
+        for a in actions:
+            v = max(v, self.min_value_WDAB(
+                self.result(state, a), alpha, beta, depth+1))
+            if v >= beta:
+                return v
+            alpha = max(alpha, v)
+        return v
 
 
 def testActions():
@@ -223,6 +276,27 @@ def testUtilities():
     print(ut)
 
 
+def testMinmax_WDAB():
+    alpha = -10000
+    beta = 10000
+    board = Board()
+    board.initializateboard()
+    playerOne = Player("black")
+    playerTwo = Player("red")
+    match = Match(board)
+    initialState = State(match)
+    ia = IA(initialState)
+    print(initialState)
+    match.board.place_marker(0, 0, playerOne.playerColor)
+    match.board.place_marker(0, 1, playerOne.playerColor)
+    match.board.place_marker(0, 2, playerOne.playerColor)
+    match.board.place_marker(0, 3, playerOne.playerColor)
+    changedState = State(match)
+    print(changedState)
+    state = ia.minmax_decision_WDAB(changedState, playerTwo, alpha, beta)
+    print(state)
+
+
 def testMinmax_AB():
     alpha = -10000
     beta = 10000
@@ -265,6 +339,9 @@ def testMinmax():
 
 # testActions()
 # play_game()
-testMinmax()
+# testMinmax()
 # testMinmax_AB()
+
+a = testMinmax_WDAB()
+print(a)
 # testUtilities()
