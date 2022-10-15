@@ -25,10 +25,6 @@ class IA:
 
     def utility_function(self, state):
         matrix = state.match.board.cells
-        # piezas juntas max +1 | si de adyacente tiene max se suma puntos, si de adyacente tiene min se restan
-        # piezas juntas min -1 | si de adyacente tiene min se resta puntos, si es max se suman
-        # si el oponente tiene una pieza junto a otra es correcto obstaculizarlo
-
         winner = state.match.checkWinner()
         value = 0
         if winner != None:
@@ -47,6 +43,13 @@ class IA:
                         value = value + 1 * boardValues[x][y]
                     if matrix[x][y].contains == "red":
                         value = value + -1 * boardValues[x][y]
+            # 5
+            for ad in range(2):
+                adv = ad + 2
+                advantage = state.match.checkAdvantage(adv)
+                if advantage != None:
+                    value = value + advantage * 5
+
         return value
 
     def Actions(self, state):
@@ -320,15 +323,15 @@ def testUtilities():
     initialState = State(match)
     ia = IA(initialState)
     print(initialState)
-    match.board.place_marker(1, 4, playerOne.playerColor)
-    match.board.place_marker(0, 1, playerOne.playerColor)
-    match.board.place_marker(0, 2, playerOne.playerColor)
-    match.board.place_marker(0, 3, playerOne.playerColor)
+    #match.board.place_marker(1, 4, playerOne.playerColor)
+    #match.board.place_marker(3, 0, playerOne.playerColor)
+    #match.board.place_marker(3, 1, playerOne.playerColor)
+    #match.board.place_marker(3, 2, playerOne.playerColor)
 
-    match.board.place_marker(1, 0, playerTwo.playerColor)
-    match.board.place_marker(1, 1, playerTwo.playerColor)
-    match.board.place_marker(1, 2, playerTwo.playerColor)
-    match.board.place_marker(1, 3, playerTwo.playerColor)
+    match.board.place_marker(1, 4, playerTwo.playerColor)
+    match.board.place_marker(3, 1, playerTwo.playerColor)
+    match.board.place_marker(3, 0, playerTwo.playerColor)
+    match.board.place_marker(3, 2, playerTwo.playerColor)
     currentState = State(match)
     print(currentState)
     ut = ia.utility_function(currentState)
@@ -410,4 +413,4 @@ def testMinmax():
 # testMinmax()
 # testMinmax_AB()
 # testMinmax_WDAB()
-# testUtilities()
+testUtilities()
