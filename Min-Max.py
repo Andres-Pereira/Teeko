@@ -1,7 +1,5 @@
 from teeko import Board, Match, Player, Cell
 
-# implementar actions para que sea mas generico
-
 
 class State:
     def __init__(self, match):
@@ -20,7 +18,30 @@ class IA:
         return state.match.checkWinner()
 
     def utility_function(self, state):
-        return 0
+        matrix = state.match.board.cells
+        # piezas juntas max +1 | si de adyacente tiene max se suma puntos, si de adyacente tiene min se restan
+        # piezas juntas min -1 | si de adyacente tiene min se resta puntos, si es max se suman
+        # si el oponente tiene una pieza junto a otra es correcto obstaculizarlo
+
+        winner = state.match.checkWinner()
+        value = 0
+        if winner != None:
+            return 100 * state.match.checkWinner()
+        else:
+            boardValues = [
+                [0, 1, 0, 1, 0],
+                [1, 2, 2, 2, 1],
+                [0, 2, 3, 2, 0],
+                [1, 2, 2, 2, 1],
+                [0, 1, 0, 1, 0]
+            ]
+            for x in range(5):
+                for y in range(5):
+                    if matrix[x][y].contains == "black":
+                        value = value + 1 * boardValues[x][y]
+                    if matrix[x][y].contains == "red":
+                        value = value + -1 * boardValues[x][y]
+        return value
 
     def Actions(self, state):
         matrix = state.match.board.cells
@@ -114,6 +135,29 @@ def play_game():
     print(result)
     ia.min_value(changedState)
 
+def testUtilities():
+    board = Board()
+    board.initializateboard()
+    playerOne = Player("black")
+    playerTwo = Player("red")
+    match = Match(board)
+    initialState = State(match)
+    ia = IA(initialState)
+    print(initialState)
+    match.board.place_marker(1, 4, playerOne.playerColor)
+    match.board.place_marker(0, 1, playerOne.playerColor)
+    match.board.place_marker(0, 2, playerOne.playerColor)
+    match.board.place_marker(0, 3, playerOne.playerColor)
 
-#testActions()
-play_game()
+    match.board.place_marker(1, 0, playerTwo.playerColor)
+    match.board.place_marker(1, 1, playerTwo.playerColor)
+    match.board.place_marker(1, 2, playerTwo.playerColor)
+    match.board.place_marker(1, 3, playerTwo.playerColor)
+    currentState = State(match)
+    print(currentState)
+    ut = ia.utility_function(currentState)
+    print(ut)
+
+# testActions()
+# play_game()
+testUtilities()
