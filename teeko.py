@@ -218,24 +218,28 @@ class Match:
             for j in range(5):
                 if self.boardlimits(i+2, j-2) or self.boardlimits(i+2, j+2) or self.boardlimits(i+1, j-1) or self.boardlimits(i+1, j+1) or self.boardlimits(i+3, j+3) or self.boardlimits(i+3, j-3):
                     if goal == 2:
-                        if matrix[i][j].contains == "black" and matrix[i + 1][j + 1].contains == "black":
-                            return 1
-                        elif matrix[i][j].contains == "red" and matrix[i + 1][j + 1].contains == "red":
-                            return -1
-
-                        if matrix[i][j].contains == "black" and matrix[i + 1][j - 1].contains == "black":
-                            return 1
-                        elif matrix[i][j].contains == "red" and matrix[i + 1][j - 1].contains == "red":
-                            return -1
+                        if (j < 4 and i < 4):
+                            if matrix[i][j].contains == "black" and matrix[i + 1][j + 1].contains == "black":
+                                return 1
+                            elif matrix[i][j].contains == "red" and matrix[i + 1][j + 1].contains == "red":
+                                return -1
+                        elif (j >= 4 and i < 4):
+                            if matrix[i][j].contains == "black" and matrix[i + 1][j - 1].contains == "black":
+                                return 1
+                            elif matrix[i][j].contains == "red" and matrix[i + 1][j - 1].contains == "red":
+                                return -1
                     if goal == 3:
-                        if matrix[i][j].contains == "black" and matrix[i + 1][j + 1].contains == "black" and matrix[i + 2][j + 2].contains == "black":
-                            return 1
-                        elif matrix[i][j].contains == "red" and matrix[i + 1][j + 1].contains == "red" and matrix[i + 2][j + 2].contains == "red":
-                            return -1
-                        if matrix[i][j].contains == "black" and matrix[i + 1][j - 1].contains == "black" and matrix[i + 2][j - 2].contains == "black":
-                            return 1
-                        elif matrix[i][j].contains == "red" and matrix[i + 1][j - 1].contains == "red" and matrix[i + 2][j - 2].contains == "red":
-                            return -1
+                        if (j < 2 and i < 2):
+                            if matrix[i][j].contains == "black" and matrix[i + 1][j + 1].contains == "black" and matrix[i + 2][j + 2].contains == "black":
+                                return 1
+                            elif matrix[i][j].contains == "red" and matrix[i + 1][j + 1].contains == "red" and matrix[i + 2][j + 2].contains == "red":
+                                return -1
+                        elif (j >= 3 and i < 2):
+                            if matrix[i][j].contains == "black" and matrix[i + 1][j - 1].contains == "black" and matrix[i + 2][j - 2].contains == "black":
+                                return 1
+                            elif matrix[i][j].contains == "red" and matrix[i + 1][j - 1].contains == "red" and matrix[i + 2][j - 2].contains == "red":
+                                return -1
+
         return None
 
     def square(self, goal):
@@ -263,23 +267,6 @@ class Match:
         if winner != None:
             return winner
         winner = self.square(self)
-        if winner != None:
-            return winner
-
-        return winner
-
-    def checkAdvantage(self, goal):
-        winner = self.horizontal(goal)
-        if winner != None:
-            return winner
-        winner = self.vertical(goal)
-        if winner != None:
-            return winner
-        winner = self.diagonal(goal)
-        print(winner)
-        if winner != None:
-            return winner
-        winner = self.square(goal)
         if winner != None:
             return winner
 
