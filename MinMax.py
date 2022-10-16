@@ -238,6 +238,64 @@ class IA:
             alpha = max(alpha, v)
         return v
 
+# MINMAX WITHOUT DEPTH WITH ALPHA BETA
+    def cut_of(self, state, depth):
+        if (depth == state.max_depth or self.terminal_test(state) != None):
+            return True
+        else:
+            return False
+
+    def minmax_decision_WD(self, initialState, player):
+        actions = self.Actions(initialState)
+        if player.playerColor == "black":
+            values = []
+            for a in actions:
+                v = self.min_value_WD(self.result(
+                    initialState, a), 0)
+                values.append(v)
+            idx = np.argmax(values)
+            return self.Actions(initialState)[idx]
+        else:
+            values = []
+
+            for a in self.Actions(initialState):
+                v = self.max_value_WD(self.result(
+                    initialState, a), 0)
+                values.append(v)
+
+            idx = np.argmin(values)
+            action = actions[idx]
+            '''self.visited.append(action)
+            if(action in self.visited)'''
+
+            if len(action) == 2:
+                return action
+            elif len(action) >= 2:
+                return action[0]
+
+    def min_value_WD(self, state, depth):
+        if self.cut_of(state, depth):
+            return self.utility_function(state)
+        actions = self.Actions(state)
+        v = 10000
+        for a in actions:
+            v = min(v, self.max_value_WD(
+                self.result(
+                    state, a), depth+1))
+
+        return v
+
+    def max_value_WD(self, state, depth):
+        if self.cut_of(state, depth):
+            return self.utility_function(state)
+        actions = self.Actions(state)
+        v = -10000
+        for a in actions:
+            v = max(v, self.min_value_WD(
+                self.result(
+                    state, a), depth+1))
+        return v
+
 
 def testActions():
     board = Board()
