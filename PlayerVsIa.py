@@ -1,10 +1,12 @@
 from teeko import Board, Match, Player, Cell
 from MinMax import IA, State
+import time
 
 
 def vs():
     alpha = -10000
     beta = 10000
+    timeProm = 0
     board = Board()
     match = Match(board)
     board.initializateboard()
@@ -53,7 +55,10 @@ def vs():
         valid = False
 
         while valid == False:
+            start_time = time.time()
             state = ia.minmax_decision_WDAB(changedState, player2, alpha, beta)
+            print("--- %s seconds ---" % (time.time() - start_time))
+            timeProm += time.time()-start_time
             if match.on_range(state[1], state[0]):
                 cell = Cell(state[1], state[0], player2.playerColor)
                 valid = match.isValid(cell, player1.playerColor)
@@ -66,6 +71,9 @@ def vs():
         changedState = State(match)
         print(changedState)
     print(redPieces)
+    timeProm = timeProm/4
+    jugadas = 4
+    print("Tiempo promedio para primeros 4 turnos: ", timeProm)
     winner = match.checkWinner()
     # ------------------------------------------------------------------------
     while winner == None:
@@ -134,8 +142,12 @@ def vs():
         # Aqui tuvimos demasiados problemas al validar si era un adyacente, ya que al no cumplirse se quedaba en un bucle infinito retornando
         # el mismo estado asi que ahora la ficha de la ia se mueve pero sin importarle que no sea  adyacente a la pieza seleccionada
         while valid == False:
+            start_time = time.time()
             state2 = ia.minmax_decision_WDAB(
                 changedState, player2, alpha, beta)
+            print("--- %s seconds ---" % (time.time() - start_time))
+            timeProm += time.time()-start_time
+            jugadas += 1
 
             if match.on_range(state2[1], state2[0]):
                 cell = Cell(state2[1], state2[0], player2.playerColor)
@@ -150,6 +162,8 @@ def vs():
         print(redPieces)
         winner = match.checkWinner()
 
+    timeProm = timeProm/jugadas
+    print("Tiempo promedio para las ", jugadas, " turnos: ", timeProm)
     match.shoWinner(winner)
 
 
