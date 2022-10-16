@@ -3,8 +3,6 @@ from MinMax import IA, State
 
 
 def vs():
-    alpha = -10000
-    beta = 10000
     board = Board()
     match = Match(board)
     board.initializateboard()
@@ -53,7 +51,7 @@ def vs():
         valid = False
 
         while valid == False:
-            state = ia.minmax_decision_WDAB(changedState, player2, alpha, beta)
+            state = ia.minmax_decision_WD(changedState, player2)
             if match.on_range(state[1], state[0]):
                 cell = Cell(state[1], state[0], player2.playerColor)
                 valid = match.isValid(cell, player1.playerColor)
@@ -134,8 +132,8 @@ def vs():
         # Aqui tuvimos demasiados problemas al validar si era un adyacente, ya que al no cumplirse se quedaba en un bucle infinito retornando
         # el mismo estado asi que ahora la ficha de la ia se mueve pero sin importarle que no sea  adyacente a la pieza seleccionada
         while valid == False:
-            state2 = ia.minmax_decision_WDAB(
-                changedState, player2, alpha, beta)
+            state2 = ia.minmax_decision_WD(
+                changedState, player2)
 
             if match.on_range(state2[1], state2[0]):
                 cell = Cell(state2[1], state2[0], player2.playerColor)
