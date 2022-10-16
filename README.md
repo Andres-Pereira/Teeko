@@ -125,10 +125,12 @@ This algorithm maybe can work out with an application that has less possible sta
 some errors, even having our heuristic returning logical values and our functions tested individually we found ourselves with some bugs
 that make the AI disobey the rules of the game, somehow the AI responds making random and unestablished actions, we expect it's about a 
 little bug we need to correct in our possible actions. With this said, we can't realize the experiments we expected, but still we want
-to share that testing our AI to perform an individual action in response to a state we saw that without alphabeta prunning
-takes almost the double amount of time in responding than with alpha beta.
-We want to make clear that the programs are actually working and without crashing but the rules aren't been respected and the moves
-the AI makes are illogical, still, is a runnable program and can take smart decisions in a decent response time.
+to share that we actually incorporated an average time response in a game with alpha-beta and without it, so when you ran both programs and
+finish a game, it will show you the average time that the AI performed during the game. We think this are interesting results and maybe with
+more time would have been plotted.
+We want to make clear that the programs are actually working and functional, without crashing but the rules aren't been respected
+and the moves the AI makes are illogical in some cases, still, is a runnable program and can take smart decisions in a decent response time and
+also it can be time-tested to study the time efficiency in both algorithms.
 
 
 ##### Conclusion
@@ -139,7 +141,9 @@ intelligent and predictable our program is. But also this can make the program t
 or it can also crash the program itself. For a 1v1 game a long response time is not optimal, we can't be waiting that long
 for the computer to perform. That doesn't mean that we will have to conform with an unintelligent program, we can see that 
 our heuristic function and how it works will also define how optimal are the decisions that the program perform. We can tell
-this by the experiments we made to check the utility and how this affected the decisions the algorithm made.
+this by the experiments we made to check the utility and how this affected the decisions the algorithm made. With all that 
+said we can conclude that it is logical that our average response time are lower in the algorithm that uses alpha beta
+prunning.
 
 
 ##### Authors: 
