@@ -7,6 +7,7 @@ def vs():
     alpha = -10000
     beta = 10000
     timeProm = 0
+    timeProm2 = 0
     board = Board()
     match = Match(board)
     board.initializateboard()
@@ -71,6 +72,7 @@ def vs():
         changedState = State(match)
         print(changedState)
     print(redPieces)
+    timeProm2 = timeProm
     timeProm = timeProm/4
     jugadas = 4
     print("Tiempo promedio para primeros 4 turnos: ", timeProm)
@@ -146,7 +148,7 @@ def vs():
             state2 = ia.minmax_decision_WDAB(
                 changedState, player2, alpha, beta)
             print("--- %s seconds ---" % (time.time() - start_time))
-            timeProm += time.time()-start_time
+            timeProm2 += time.time()-start_time
             jugadas += 1
 
             if match.on_range(state2[1], state2[0]):
@@ -162,8 +164,8 @@ def vs():
         print(redPieces)
         winner = match.checkWinner()
 
-    timeProm = timeProm/jugadas
-    print("Tiempo promedio para las ", jugadas, " turnos: ", timeProm)
+    timeProm2 = timeProm2/jugadas
+    print("Tiempo promedio para las ", jugadas, " turnos: ", timeProm2)
     match.shoWinner(winner)
 
 
