@@ -19,6 +19,7 @@ class State:
 class IA:
     def __init__(self, initialState):
         self.initalState = initialState
+        visited = []
 
     def terminal_test(self, state):
         return state.match.checkWinner()
@@ -78,16 +79,18 @@ class IA:
         return state
 
     def result(self, state, action):
-        if (len(action) == 1):
-            p1y = action[0][1]
-            p1x = action[0][0]
-        else:
-            p1y = action[0]
-            p1x = action[1]
+        if len(action) > 0:
+            if (len(action) == 1):
+                p1y = action[0][1]
+                p1x = action[0][0]
+            else:
+                p1y = action[0]
+                p1x = action[1]
 
-        stateCopy = state.copy()
-        stateCopy.match.board.place_marker(p1y, p1x, 'red')
-        return stateCopy
+            stateCopy = state.copy()
+            stateCopy.match.board.place_marker(p1y, p1x, 'red')
+            return stateCopy
+        return state
 
     def minmax_decision(self, initialState, player):
         actions = self.Actions(initialState)
@@ -173,52 +176,6 @@ class IA:
 
     # MINMAX WITH DEPTH WITH ALPHA BETA
 
-    '''def minmax_decision_WDAB(self, initialState, player, alpha, beta):
-        actions = initialState.Actions()
-        if player.playerColor == "black":
-            values = []
-            for a in actions:
-                v = self.min_value_WDAB(initialState.result(
-                    a), alpha, beta, 0)
-                values.append(v)
-            idx = np.argmax(values)
-            return initialState.Actions()[idx]
-        else:
-            values = []
-            for a in initialState.Actions():
-                v = self.max_value_WDAB(initialState.result(
-                    a), alpha, beta, 0)
-                values.append(v)
-            idx = np.argmin(values)
-            return initialState.Actions()[idx]
-
-    def min_value_WDAB(self, state, alpha, beta, depth):
-
-        if state.cut_of(depth):
-            return state.utility_function()
-        actions = state.Actions()
-        v = 10000
-        for a in actions:
-            v = min(v, self.max_value_WDAB(
-                state.result(a), alpha, beta, depth+1))
-            if v <= alpha:
-                return v
-            beta = min(beta, v)
-        return v
-
-    def max_value_WDAB(self, state, alpha, beta, depth):
-        if state.cut_of(depth):
-            return state.utility_function()
-        actions = state.Actions()
-        v = -10000
-        for a in actions:
-            v = max(v, self.min_value_WDAB(
-                state.result(a), alpha, beta, depth+1))
-            if v >= beta:
-                return v
-            alpha = max(alpha, v)
-        return v'''
-
     def cut_of(self, state, depth):
         if (depth == state.max_depth or self.terminal_test(state) != None):
             return True
@@ -237,12 +194,21 @@ class IA:
             return self.Actions(initialState)[idx]
         else:
             values = []
+
             for a in self.Actions(initialState):
                 v = self.max_value_WDAB(self.result(
                     initialState, a), alpha, beta, 0)
                 values.append(v)
+
             idx = np.argmin(values)
-            return self.Actions(initialState)[idx]
+            action = actions[idx]
+            '''self.visited.append(action)
+            if(action in self.visited)'''
+
+            if len(action) == 2:
+                return action
+            elif len(action) >= 2:
+                return action[0]
 
     def min_value_WDAB(self, state, alpha, beta, depth):
         if self.cut_of(state, depth):
@@ -418,4 +384,4 @@ def testMinmax():
 # testMinmax()
 # testMinmax_AB()
 # testMinmax_WDAB()
-testUtilities()
+# testUtilities()

@@ -12,6 +12,7 @@ def vs():
     player2 = Player("red")
     initialState = State(match)
     ia = IA(initialState)
+    redPieces = []
     charToNum = {
         'A': 0,
         'B': 1,
@@ -50,6 +51,7 @@ def vs():
         print(changedState)
         print("Red's turn")
         valid = False
+
         while valid == False:
             state = ia.minmax_decision_WDAB(changedState, player2, alpha, beta)
             if match.on_range(state[1], state[0]):
@@ -57,13 +59,13 @@ def vs():
                 valid = match.isValid(cell, player1.playerColor)
             else:
                 print("Out of limits")
-
+        redPieces.append(state)
         print(state)
         match.board.place_marker(state[1], state[0], player2.playerColor)
 
         changedState = State(match)
         print(changedState)
-
+    print(redPieces)
     winner = match.checkWinner()
     # ------------------------------------------------------------------------
     while winner == None:
@@ -102,47 +104,48 @@ def vs():
                     print("Out of limits")
 
         match.board.place_marker(int(p1X)-1, int(p1Y), player1.playerColor)
-        mat = board.__str__()
-        print(mat)
+        changedState = State(match)
+        print(changedState)
         winner = match.checkWinner()
 
         print("Red's turn")
         playersMarker = False
-        while playersMarker == False:
-            print("Which marker do you want to move?")
-            pos = input("Enter a position: ")
-            p2Y = pos[0]
-            p2Y = charToNum[p2Y]
-            p2X = pos[1]
-            if match.on_range(int(p2X), int(p2Y)):
-                cell = Cell(int(p2X) - 1, int(p2Y), player2.playerColor)
+        i = 0
+        while playersMarker == False and i < 5:
+
+            stateToRemove = redPieces[i]
+            if match.on_range(stateToRemove[1], stateToRemove[0]):
+                cell = Cell(stateToRemove[1],
+                            stateToRemove[0], player2.playerColor)
                 playersMarker = match.isPlayers(cell, player2.playerColor)
             else:
                 print("Out of limits")
+            i += 1
 
+        print(stateToRemove)
+        redPieces.remove(stateToRemove)
+        #del redPieces[i]
         ad = match.adyacentMove(cell)
-        match.board.remove_marker(int(p2X)-1, int(p2Y))
-
+        match.board.remove_marker(stateToRemove[1], stateToRemove[0])
         valid = False
         ady = False
-        while valid == False:
-            while ady == False:
-                print("Where do you want to move?")
-                print(ad)
-                pos = input("Enter a position: ")
-                p2Y = pos[0]
-                p2Y = charToNum[p2Y]
-                p2X = pos[1]
-                if match.on_range(int(p2X), int(p2Y)):
-                    cell = Cell(int(p2X)-1, int(p2Y), player2.playerColor)
-                    valid = match.isValid(cell, player1.playerColor)
-                    ady = match.isAdy(cell, ad)
-                else:
-                    print("Out of limits")
+        changedState = State(match)
 
-        match.board.place_marker(int(p2X)-1, int(p2Y), player2.playerColor)
-        mat = board.__str__()
-        print(mat)
+        while valid == False:
+            state2 = ia.minmax_decision_WDAB(
+                changedState, player2, alpha, beta)
+
+            if match.on_range(state2[1], state2[0]):
+                cell = Cell(state2[1], state2[0], player2.playerColor)
+                valid = match.isValid(cell, player1.playerColor)
+            else:
+                print("Out of limits")
+
+        match.board.place_marker(state2[1], state2[0], player2.playerColor)
+        redPieces.append(state2)
+        changedState = State(match)
+        print(changedState)
+        print(redPieces)
         winner = match.checkWinner()
 
     match.shoWinner(winner)
